@@ -1,4 +1,4 @@
-package com.phong.blog.Authentication.model;
+package com.phong.blog.User.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,7 +15,8 @@ public class UserCredential {
     @JoinColumn(name = "user_id")
     private User user;
     private String hashedPassword;
-    private String userName;
+    @Column(name = "user_name")
+    private String username;
     private String email;
     private String passRecvToken;
 

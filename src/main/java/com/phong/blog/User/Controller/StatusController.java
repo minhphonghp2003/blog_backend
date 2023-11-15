@@ -1,6 +1,6 @@
-package com.phong.blog.Authentication.Controller;
+package com.phong.blog.User.Controller;
 
-import com.phong.blog.Authentication.Service.Service;
+import com.phong.blog.User.Service.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,8 +1,9 @@
-package com.phong.blog.Authentication.model;
+package com.phong.blog.User.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,4 +23,7 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private UserCredential credential;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 }
