@@ -17,6 +17,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,18 +62,19 @@ public class Service {
         return newUser;
     }
 
-    public String getTokenFromCred(String username, String password) {
+    private UserDetails getUserDetailWhenValidated(String username, String password){
         Authentication authentication;
-        try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password));
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String jwt = jwtUtils.generateToken(userDetails.getUser());
-            return jwt;
+        authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password));
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+        return userDetails;
+    }
 
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
+    public String getTokenFromCred(String username, String password) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        UserDetails userDetails = getUserDetailWhenValidated(username,password);
+        String jwt = jwtUtils.generateToken(userDetails.getUser());
+        return jwt;
     }
 }
