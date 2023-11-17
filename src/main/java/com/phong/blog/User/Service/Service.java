@@ -10,6 +10,8 @@ import com.phong.blog.Utils.JwtUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +25,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
@@ -62,7 +65,7 @@ public class Service {
         return newUser;
     }
 
-    private UserDetails getUserDetailWhenValidated(String username, String password){
+    private UserDetails getUserDetailWhenValidated(String username, String password) {
         Authentication authentication;
         authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
@@ -73,8 +76,31 @@ public class Service {
     }
 
     public String getTokenFromCred(String username, String password) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        UserDetails userDetails = getUserDetailWhenValidated(username,password);
+        UserDetails userDetails = getUserDetailWhenValidated(username, password);
         String jwt = jwtUtils.generateToken(userDetails.getUser());
         return jwt;
     }
+
+    @Transactional
+    public String updateRecvToken(String email) {
+        String token = UUID.randomUUID().toString();
+        credentialRepository.updateRecvToken(email, token);
+        TaskExecutor theExecutor = new SimpleAsyncTaskExecutor();
+        theExecutor.execute(() -> {
+            try {
+                Thread.sleep(5 * 1000 * 60 );
+                credentialRepository.removeRecvToken(email);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
+
+        });
+        return token;
+    }
+    @Transactional
+    public void resetPassword(String token, String password){
+        String hashed = passwordEncoder.encode(password);
+        credentialRepository.updatePassword(token,hashed);
+    }
+
 }
