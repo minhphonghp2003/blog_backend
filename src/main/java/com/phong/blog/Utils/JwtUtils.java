@@ -49,7 +49,7 @@ public class JwtUtils {
         Claims claims = Jwts.claims();
         claims.put("sub",u.getCredential().getUsername());
         claims.put("roles",u.getRoles());
-        claims.put("uid",u.getId());
+        claims.put("jti",u.getId());
         return Jwts.builder()
                 .setClaims(claims)
                 .signWith(key).setIssuedAt(new Date(System.currentTimeMillis()))

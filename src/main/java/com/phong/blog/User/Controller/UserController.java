@@ -1,9 +1,6 @@
 package com.phong.blog.User.Controller;
 
-import com.phong.blog.User.DTO.LoginDTO;
-import com.phong.blog.User.DTO.RegisterDTO;
-import com.phong.blog.User.DTO.ResponseDTO;
-import com.phong.blog.User.DTO.UpdatePasswordDTO;
+import com.phong.blog.User.DTO.*;
 import com.phong.blog.User.Service.Service;
 import com.phong.blog.User.model.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("user")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
@@ -78,5 +75,25 @@ public class UserController {
        }catch (Exception e){
             return ResponseEntity.status(400).body("Unsuccessful");
        }
+    }
+    @GetMapping("/userDetail")
+    public UserDetailDTO getUserDetail(@RequestHeader (name="Authorization") String token, HttpServletRequest request){
+        return userService.getUserDetails(token);
+    }
+
+    @Secured({"ADMIN","AUTHOR"})
+    @PutMapping("/userDetail")
+    public void updateUserDetail(@RequestBody UserDetailUpdateDTO userDetailUpdateDTO){
+         userService.updateUserDetail(userDetailUpdateDTO);
+    }
+
+    @DeleteMapping("/userSocial")
+    public void deleteSocial(@RequestBody String id){
+        userService.deleteUserSocial(Integer.valueOf(id));
+    }
+
+    @PostMapping("/userSocial")
+    public void addUserSocial(@RequestBody SocialUpdateDTO socialUpdateDTO){
+        userService.addUserSocial(socialUpdateDTO);
     }
 }

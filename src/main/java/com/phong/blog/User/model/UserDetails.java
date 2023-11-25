@@ -28,6 +28,10 @@ public class UserDetails implements org.springframework.security.core.userdetail
         return authorities;
     }
 
+    public UUID getId() {
+        return user.getId();
+    }
+
     @Override
     public String getPassword() {
         return user.getCredential().getHashedPassword();

@@ -1,15 +1,16 @@
 package com.phong.blog.User.Service;
 
 import com.phong.blog.User.DTO.RegisterDTO;
-import com.phong.blog.User.Repository.CredentialRepository;
-import com.phong.blog.User.Repository.RoleRepository;
-import com.phong.blog.User.Repository.StatusRepository;
-import com.phong.blog.User.Repository.UserRepository;
+import com.phong.blog.User.DTO.SocialUpdateDTO;
+import com.phong.blog.User.DTO.UserDetailDTO;
+import com.phong.blog.User.DTO.UserDetailUpdateDTO;
+import com.phong.blog.User.Repository.*;
 import com.phong.blog.User.model.*;
 import com.phong.blog.Utils.JwtUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,10 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
@@ -33,6 +31,7 @@ import java.util.stream.Collectors;
 public class Service {
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
+    private final SocialRepository socialRepository;
     private final CredentialRepository credentialRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -88,7 +87,7 @@ public class Service {
         TaskExecutor theExecutor = new SimpleAsyncTaskExecutor();
         theExecutor.execute(() -> {
             try {
-                Thread.sleep(5 * 1000 * 60 );
+                Thread.sleep(5 * 1000 * 60);
                 credentialRepository.removeRecvToken(email);
             } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
@@ -97,10 +96,50 @@ public class Service {
         });
         return token;
     }
+
     @Transactional
-    public void resetPassword(String token, String password){
+    public void resetPassword(String token, String password) {
         String hashed = passwordEncoder.encode(password);
-        credentialRepository.updatePassword(token,hashed);
+        credentialRepository.updatePassword(token, hashed);
     }
 
+    public UserDetailDTO getUserDetails(String token) {
+        UUID id = UUID.fromString(jwtUtils.extractId(token));
+        User user = userRepository.findById(id).orElse(null);
+        UserCredential credential = user.getCredential();
+        UserDetailDTO userDetailDTO = modelMapper.map(user, UserDetailDTO.class);
+        userDetailDTO.setUsername(credential.getUsername());
+        userDetailDTO.setEmail(credential.getEmail());
+        userDetailDTO.setRoles(new HashSet<>());
+        for (Role role :
+                user.getRoles()) {
+            userDetailDTO.getRoles().add(String.valueOf(role.getName()));
+        }
+
+        return userDetailDTO;
+    }
+
+
+    public void updateUserDetail(UserDetailUpdateDTO userDetailUpdateDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = ((UserDetails)(authentication.getPrincipal())).getUser();
+        modelMapper.map(userDetailUpdateDTO,user);
+        userRepository.save(user);
+    }
+
+    public void addUserSocial(SocialUpdateDTO socialUpdateDTO){
+        User user = userRepository.findById(socialUpdateDTO.getUserId()).orElse(null);
+        if(user==null){
+            return;
+        }
+        Social social = new Social();
+        social.setUser(user);
+        social.setLink(socialUpdateDTO.getLink());
+        social.setName(socialUpdateDTO.getName());
+        socialRepository.save(social);
+    }
+
+    public void deleteUserSocial(Integer id){
+        socialRepository.deleteById(id);
+    }
 }
