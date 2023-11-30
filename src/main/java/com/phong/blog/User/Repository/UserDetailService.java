@@ -1,14 +1,12 @@
 package com.phong.blog.User.Repository;
 
-import com.phong.blog.User.model.User;
-import com.phong.blog.User.model.UserCredential;
+import com.phong.blog.User.Model.User;
+import com.phong.blog.User.Model.UserCredential;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -19,6 +17,6 @@ public class UserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
          UserCredential userCredential=  credentialRepository.findByUsername(username);
          User user = userRepository.findById(userCredential.getUser().getId()).orElse(new User());
-         return new com.phong.blog.User.model.UserDetails(user);
+         return new com.phong.blog.User.Model.UserDetails(user);
     }
 }

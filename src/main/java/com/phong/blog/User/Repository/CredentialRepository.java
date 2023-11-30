@@ -1,7 +1,7 @@
 package com.phong.blog.User.Repository;
 
-import com.phong.blog.User.model.User;
-import com.phong.blog.User.model.UserCredential;
+import com.phong.blog.User.Model.User;
+import com.phong.blog.User.Model.UserCredential;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

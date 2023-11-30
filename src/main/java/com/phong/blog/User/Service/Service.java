@@ -5,12 +5,11 @@ import com.phong.blog.User.DTO.SocialUpdateDTO;
 import com.phong.blog.User.DTO.UserDetailDTO;
 import com.phong.blog.User.DTO.UserDetailUpdateDTO;
 import com.phong.blog.User.Repository.*;
-import com.phong.blog.User.model.*;
+import com.phong.blog.User.Model.*;
 import com.phong.blog.Utils.JwtUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +23,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor

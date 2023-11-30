@@ -1,5 +1,5 @@
 package com.phong.blog.Utils;
-import com.phong.blog.User.model.User;
+import com.phong.blog.User.Model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

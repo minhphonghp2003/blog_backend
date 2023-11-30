@@ -2,7 +2,8 @@ package com.phong.blog.User.Controller;
 
 import com.phong.blog.User.DTO.*;
 import com.phong.blog.User.Service.Service;
-import com.phong.blog.User.model.User;
+import com.phong.blog.User.Model.User;
+import com.phong.blog.Utils.AuthUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,8 +27,13 @@ import java.util.Map;
 public class UserController {
     private final Service userService;
     private final ModelMapper modelMapper;
-    Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final AuthUtils authUtils;
 
+    @Secured({"ADMIN","AUTHOR"})
+    @GetMapping("/checkAdmin")
+    public Boolean isAdmin(){
+        return authUtils.isAdmin();
+    }
 
     @Secured({"ADMIN"})
     @GetMapping("/alluser")

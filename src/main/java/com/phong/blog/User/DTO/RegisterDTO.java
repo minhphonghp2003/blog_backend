@@ -1,7 +1,5 @@
 package com.phong.blog.User.DTO;
 
-import com.phong.blog.User.model.ERole;
-import com.phong.blog.User.model.EStatus;
 import lombok.Data;
 
 import java.util.Set;

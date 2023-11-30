@@ -1,4 +1,4 @@
-package com.phong.blog.User.model;
+package com.phong.blog.User.Model;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

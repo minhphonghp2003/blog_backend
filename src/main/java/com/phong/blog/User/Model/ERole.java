@@ -1,4 +1,4 @@
-package com.phong.blog.User.model;
+package com.phong.blog.User.Model;
 
 public enum ERole {
     ADMIN,

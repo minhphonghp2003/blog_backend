@@ -1,8 +1,7 @@
 package com.phong.blog.User.Repository;
 
-import com.phong.blog.User.model.ERole;
-import com.phong.blog.User.model.EStatus;
-import com.phong.blog.User.model.Status;
+import com.phong.blog.User.Model.EStatus;
+import com.phong.blog.User.Model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

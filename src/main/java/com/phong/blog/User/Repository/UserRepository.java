@@ -1,6 +1,6 @@
 package com.phong.blog.User.Repository;
 
-import com.phong.blog.User.model.User;
+import com.phong.blog.User.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

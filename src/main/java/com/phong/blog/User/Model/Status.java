@@ -1,4 +1,4 @@
-package com.phong.blog.User.model;
+package com.phong.blog.User.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

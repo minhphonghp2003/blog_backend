@@ -1,7 +1,6 @@
 package com.phong.blog.User.DTO;
 
-import com.phong.blog.User.model.Role;
-import com.phong.blog.User.model.Status;
+import com.phong.blog.User.Model.Status;
 import lombok.Data;
 
 import java.util.List;
