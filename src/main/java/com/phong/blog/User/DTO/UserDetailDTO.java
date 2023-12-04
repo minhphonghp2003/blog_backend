@@ -1,5 +1,7 @@
 package com.phong.blog.User.DTO;
 
+import com.phong.blog.Blog.Model.Comment;
+import com.phong.blog.Blog.Model.Tag;
 import com.phong.blog.User.Model.Status;
 import lombok.Data;
 
@@ -16,6 +18,16 @@ class SocialDTO{
 }
 
 @Data
+class PostDTO{
+    private int id;
+    private Integer likeCount;
+    private Integer shareCount;
+    private Integer viewCount;
+    private List<Comment> comments;
+    private Set<Tag> tags;
+}
+
+@Data
 public class UserDetailDTO {
     private UUID id;
     private String fullName;
@@ -27,4 +39,5 @@ public class UserDetailDTO {
     private List<SocialDTO> socials;
     private String username;
     private String email;
+    private List<PostDTO>posts;
 }

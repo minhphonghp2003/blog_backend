@@ -1,5 +1,6 @@
 package com.phong.blog.Blog.Service;
 
+import com.phong.blog.Blog.DTO.TopicDTO;
 import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.Topic;
 import com.phong.blog.Blog.Repository.TopicRepository;
@@ -38,5 +39,9 @@ public class TopicService {
 
     public void removeTopic(int id) {
         topicRepository.deleteById(id);
+    }
+
+    public List<Topic> getAllTopic() {
+        return topicRepository.findByStatus(EStatus.ACTIVE);
     }
 }

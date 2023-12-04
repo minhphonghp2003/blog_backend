@@ -8,6 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReadingListService {
@@ -15,6 +17,9 @@ public class ReadingListService {
 
     public ReadingList createReadingList( ReadingList readingList){
         return readingListRepository.save(readingList);
+    }
+    public List<ReadingList> getAllReadingList(){
+        return readingListRepository.findAll();
     }
 
 }

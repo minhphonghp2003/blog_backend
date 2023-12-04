@@ -1,19 +1,26 @@
 package com.phong.blog.Blog.Controller;
 
+import com.phong.blog.Blog.DTO.AuthorPostDTO;
+import com.phong.blog.Blog.DTO.NewPostDTO;
+import com.phong.blog.Blog.DTO.PostDTO;
 import com.phong.blog.Blog.Model.Comment;
+import com.phong.blog.Blog.Model.Post;
 import com.phong.blog.Blog.Service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("post")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PostController {
+    private final ModelMapper modelMapper;
     private final PostService postService;
 
     @GetMapping("/comments")
@@ -21,5 +28,23 @@ public class PostController {
         return postService.getComments(postId);
     }
 
+    @Secured({"ADMIN","AUTHOR"})
+    @PostMapping("/")
+    public NewPostDTO createPost(@RequestBody NewPostDTO newPostDTO){
+       return modelMapper.map(postService.createPost(newPostDTO),newPostDTO.getClass());
+    }
 
+    @GetMapping("/author")
+    public Page<PostDTO> authorPost( AuthorPostDTO authorPostDTO){
+        Page<Post> postPage =  postService.getPostOfAuthor(authorPostDTO);
+        return postPage.map(post -> {
+            PostDTO postDTO = modelMapper.map(post,PostDTO.class);
+            return postDTO;
+        });
+    }
+    @DeleteMapping("/")
+    @Secured({"ADMIN","AUTHOR"})
+    public void deletePost(@RequestBody Integer id){
+         postService.deletePost(id);
+    }
 }

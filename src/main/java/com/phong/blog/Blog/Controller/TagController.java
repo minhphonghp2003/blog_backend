@@ -12,16 +12,17 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("tag")
-@Secured({"ADMIN","AUTHOR"})
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TagController {
     private final TagService tagService;
 
     @Secured("ADMIN")
     @GetMapping("/pending")
-    public List<Tag> getPendingTag(){
-       return tagService.getPendingTags() ;
+    public List<Tag> getPendingTag() {
+        return tagService.getPendingTags();
     }
+
+    @Secured({"ADMIN", "AUTHOR"})
     @PostMapping("/")
     public Tag createTag(@RequestBody String name) {
         Tag tag = new Tag();
@@ -29,14 +30,20 @@ public class TagController {
         return tagService.createTag(tag);
     }
 
+    @GetMapping("/all")
+    public List<Tag> getAllTag() {
+        return tagService.getAllTags();
+    }
+
     @Secured("ADMIN")
     @PutMapping("/")
-    public void acceptTagRequest(@RequestBody int id){
+    public void acceptTagRequest(@RequestBody int id) {
         tagService.updateTagStatus(id, EStatus.ACTIVE);
     }
+
     @Secured("ADMIN")
     @DeleteMapping("/")
-    public void deleteTag(@RequestBody int id){
+    public void deleteTag(@RequestBody int id) {
         tagService.removeTag(id);
     }
 }

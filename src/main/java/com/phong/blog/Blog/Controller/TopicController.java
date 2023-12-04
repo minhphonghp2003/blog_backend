@@ -1,7 +1,9 @@
 package com.phong.blog.Blog.Controller;
 
+import com.phong.blog.Blog.DTO.ReadingListDTO;
 import com.phong.blog.Blog.DTO.TopicDTO;
 import com.phong.blog.Blog.Model.EStatus;
+import com.phong.blog.Blog.Model.ReadingList;
 import com.phong.blog.Blog.Model.Topic;
 import com.phong.blog.Blog.Service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,18 @@ public class TopicController {
     private final TopicService topicService;
     private final ModelMapper modelMapper;
 
-    @Secured({"ADMIN","AUTHOR"})
+    @GetMapping("/all")
+    public List<TopicDTO> getAllTopic() {
+        {
+            List<Topic> topics = topicService.getAllTopic();
+            List<TopicDTO> topicDTOS = modelMapper.map(topics, new TypeToken<List<TopicDTO>>() {
+            }.getType());
+
+            return topicDTOS;
+        }
+    }
+
+    @Secured({"ADMIN", "AUTHOR"})
     @PostMapping("/")
     public Topic createTopic(@RequestBody TopicDTO topicDTO) {
         return topicService.createTopic(modelMapper.map(topicDTO, Topic.class));
@@ -28,20 +41,21 @@ public class TopicController {
 
     @Secured("ADMIN")
     @GetMapping("/pending")
-    public List<TopicDTO> getPendingTopic(){
-        List<Topic> topics =  topicService.getPendingTopic();
-        return modelMapper.map(topics, new TypeToken<List<TopicDTO>>() {}.getType());
+    public List<TopicDTO> getPendingTopic() {
+        List<Topic> topics = topicService.getPendingTopic();
+        return modelMapper.map(topics, new TypeToken<List<TopicDTO>>() {
+        }.getType());
     }
 
     @Secured("ADMIN")
     @PutMapping("/")
-    public void acceptPendingTopic(@RequestBody int id){
-       topicService.updateTopicStatus(id, EStatus.ACTIVE);
+    public void acceptPendingTopic(@RequestBody int id) {
+        topicService.updateTopicStatus(id, EStatus.ACTIVE);
     }
 
     @Secured("ADMIN")
     @DeleteMapping("/")
-    public void deleteTopic(@RequestBody int id){
+    public void deleteTopic(@RequestBody int id) {
         topicService.removeTopic(id);
     }
 

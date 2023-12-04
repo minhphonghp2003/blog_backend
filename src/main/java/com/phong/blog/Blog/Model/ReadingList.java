@@ -18,7 +18,7 @@ public class ReadingList {
     private String name;
     private String image;
     @Enumerated(EnumType.STRING)
-    private EStatus status;
+    private EStatus status = EStatus.ACTIVE;
 
     @Override
     public String toString() {
