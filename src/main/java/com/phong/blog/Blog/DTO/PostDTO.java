@@ -8,10 +8,12 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 
 @Data
 class NameDTO {
+    private int id;
     private String name;
 }
 
@@ -21,12 +23,19 @@ class IdDTO {
     private Integer commenterId;
 }
 
+@Data
+class AuthorDTO{
+    private UUID id;
+    private String fullName;
+    private String avatar;
+}
 
 
 @Data
 public class PostDTO {
     private Integer id;
     private String imageLink;
+    private String postLink;
     private String title;
     private Integer likeCount;
     private Integer shareCount;
@@ -36,6 +45,7 @@ public class PostDTO {
     private Set<NameDTO> tags;
     private NameDTO readingList;
     private List<IdDTO> comments;
+    private AuthorDTO author;
     private Instant createdAt;
     private Instant updatedAt;
 }

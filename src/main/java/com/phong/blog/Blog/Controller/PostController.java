@@ -3,6 +3,7 @@ package com.phong.blog.Blog.Controller;
 import com.phong.blog.Blog.DTO.AuthorPostDTO;
 import com.phong.blog.Blog.DTO.NewPostDTO;
 import com.phong.blog.Blog.DTO.PostDTO;
+import com.phong.blog.Blog.DTO.UpdatePostDTO;
 import com.phong.blog.Blog.Model.Comment;
 import com.phong.blog.Blog.Model.Post;
 import com.phong.blog.Blog.Service.PostService;
@@ -28,23 +29,36 @@ public class PostController {
         return postService.getComments(postId);
     }
 
-    @Secured({"ADMIN","AUTHOR"})
+    @Secured({"ADMIN", "AUTHOR"})
     @PostMapping("/")
-    public NewPostDTO createPost(@RequestBody NewPostDTO newPostDTO){
-       return modelMapper.map(postService.createPost(newPostDTO),newPostDTO.getClass());
+    public NewPostDTO createPost(@RequestBody NewPostDTO newPostDTO) {
+        return modelMapper.map(postService.createPost(newPostDTO), newPostDTO.getClass());
+    }
+
+    @Secured({"ADMIN", "AUTHOR"})
+    @PutMapping("/")
+    public UpdatePostDTO updatePost(@RequestBody UpdatePostDTO updatePostDTO) {
+        return modelMapper.map(postService.updatePost(updatePostDTO), updatePostDTO.getClass());
     }
 
     @GetMapping("/author")
-    public Page<PostDTO> authorPost( AuthorPostDTO authorPostDTO){
-        Page<Post> postPage =  postService.getPostOfAuthor(authorPostDTO);
+    public Page<PostDTO> authorPost(AuthorPostDTO authorPostDTO) {
+        Page<Post> postPage = postService.getPostOfAuthor(authorPostDTO);
         return postPage.map(post -> {
-            PostDTO postDTO = modelMapper.map(post,PostDTO.class);
+            PostDTO postDTO = modelMapper.map(post, PostDTO.class);
             return postDTO;
         });
     }
+
+    @GetMapping("/")
+    public PostDTO getPost(int id) {
+        Post post = postService.getPost(id);
+        return modelMapper.map(post, PostDTO.class);
+    }
+
     @DeleteMapping("/")
-    @Secured({"ADMIN","AUTHOR"})
-    public void deletePost(@RequestBody Integer id){
-         postService.deletePost(id);
+    @Secured({"ADMIN", "AUTHOR"})
+    public void deletePost(@RequestBody Integer id) {
+        postService.deletePost(id);
     }
 }

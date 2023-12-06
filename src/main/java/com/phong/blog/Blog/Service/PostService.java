@@ -2,6 +2,7 @@ package com.phong.blog.Blog.Service;
 
 import com.phong.blog.Blog.DTO.AuthorPostDTO;
 import com.phong.blog.Blog.DTO.NewPostDTO;
+import com.phong.blog.Blog.DTO.UpdatePostDTO;
 import com.phong.blog.Blog.Model.*;
 import com.phong.blog.Blog.Repository.*;
 import com.phong.blog.User.Model.User;
@@ -46,7 +47,7 @@ public class PostService {
         Post newPost = modelMapper.map(newPostDTO, Post.class);
         User author = authUtils.getUserFromToken();
         ReadingList readingList = readingListRepository.findById(newPostDTO.getReadingListId()).orElse(null);
-        Topic topic = topicRepository.findById(newPost.getId()).orElse(null);
+        Topic topic = topicRepository.findById(newPostDTO.getTopicId()).orElse(null);
         Set<Tag> tags = new HashSet<>();
         for (int i :
                 newPostDTO.getTagIds()) {
@@ -75,5 +76,30 @@ public class PostService {
             System.out.println(post.getAuthor().getId());
             System.out.println(user.getId());
         }
+    }
+
+    public Post getPost(int id) {
+        return postRepository.findById(id);
+    }
+
+    public Post updatePost(UpdatePostDTO updatePostDTO) {
+        Post post = postRepository.findById(updatePostDTO.getId()) ;
+        post.setTitle(updatePostDTO.getTitle());
+        post.setForeword(updatePostDTO.getForeword());
+        ReadingList readingList = readingListRepository.findById(updatePostDTO.getReadingListId()).orElse(null);
+        Topic topic = topicRepository.findById(updatePostDTO.getTopicId()).orElse(null);
+        Set<Tag> tags = new HashSet<>();
+        for (int i :
+                updatePostDTO.getTagIds()) {
+            tags.add(tagRepository.findById(i));
+        }
+        post.setReadingList(readingList);
+        post.setTopic(topic);
+        post.setTags(tags);
+        User author = authUtils.getUserFromToken();
+        if(author.getId().equals(post.getAuthor().getId())){
+            postRepository.save(post);
+        }
+        return post;
     }
 }
