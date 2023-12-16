@@ -1,9 +1,6 @@
 package com.phong.blog.Blog.Controller;
 
-import com.phong.blog.Blog.DTO.AuthorPostDTO;
-import com.phong.blog.Blog.DTO.NewPostDTO;
-import com.phong.blog.Blog.DTO.PostDTO;
-import com.phong.blog.Blog.DTO.UpdatePostDTO;
+import com.phong.blog.Blog.DTO.*;
 import com.phong.blog.Blog.Model.Comment;
 import com.phong.blog.Blog.Model.Post;
 import com.phong.blog.Blog.Service.PostService;
@@ -55,10 +52,27 @@ public class PostController {
         Post post = postService.getPost(id);
         return modelMapper.map(post, PostDTO.class);
     }
+    @GetMapping("/postby")
+    public Page<PostDTO> getPostBy(AllPostByReq allPostByReq){
+        Page<Post> postPage = postService.getAllPostBy(allPostByReq);
+        return  postPage.map(post -> {
+            PostDTO postDTO = modelMapper.map(post, PostDTO.class);
+            return postDTO;
+        });
+    }
 
     @DeleteMapping("/")
     @Secured({"ADMIN", "AUTHOR"})
     public void deletePost(@RequestBody Integer id) {
         postService.deletePost(id);
+    }
+
+    @GetMapping("/all")
+    public Page<PostDTO> getAllPost( AllPostReqDTO allPostReqDTO){
+        Page<Post> postPage = postService.getAllPost(allPostReqDTO);
+        return  postPage.map(post -> {
+            PostDTO postDTO = modelMapper.map(post, PostDTO.class);
+            return postDTO;
+        });
     }
 }

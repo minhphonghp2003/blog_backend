@@ -1,8 +1,6 @@
 package com.phong.blog.Blog.Service;
 
-import com.phong.blog.Blog.DTO.AuthorPostDTO;
-import com.phong.blog.Blog.DTO.NewPostDTO;
-import com.phong.blog.Blog.DTO.UpdatePostDTO;
+import com.phong.blog.Blog.DTO.*;
 import com.phong.blog.Blog.Model.*;
 import com.phong.blog.Blog.Repository.*;
 import com.phong.blog.User.Model.User;
@@ -67,12 +65,31 @@ public class PostService {
         Pageable pageable = PageRequest.of(authorPostDTO.getPage(), authorPostDTO.getLimit(), Sort.by("updatedAt").descending());
         return postRepository.findByAuthor(author, pageable);
     }
-    public void deletePost(Integer id){
+
+    public Page<Post> getAllPost(AllPostReqDTO allPostReqDTO) {
+
+        Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(String.valueOf(allPostReqDTO.getSortBy())).descending());
+        return postRepository.findAll(pageable);
+    }
+
+    public Page<Post> getAllPostBy(AllPostByReq allPostByReq) {
+        Page<Post> posts = null;
+        Pageable pageable = PageRequest.of(allPostByReq.getPage(), allPostByReq.getLimit(), Sort.by(String.valueOf(allPostByReq.getSortBy())).descending());
+        if (String.valueOf(allPostByReq.getGetBy()).equals("topic")) {
+            posts = postRepository.findByTopic(topicRepository.findById(allPostByReq.getId()).orElse(null), pageable);
+        }
+        if (String.valueOf(allPostByReq.getGetBy()).equals("readinglist")) {
+            posts = postRepository.findByReadingList(readingListRepository.findById(allPostByReq.getId()).orElse(null), pageable);
+        }
+        return posts;
+    }
+
+    public void deletePost(Integer id) {
         User user = authUtils.getUserFromToken();
         Post post = postRepository.findById(id).orElse(null);
-        if(user.getId().equals( post.getAuthor().getId())){
+        if (user.getId().equals(post.getAuthor().getId())) {
             postRepository.deleteById(id);
-        }else{
+        } else {
             System.out.println(post.getAuthor().getId());
             System.out.println(user.getId());
         }
@@ -83,7 +100,7 @@ public class PostService {
     }
 
     public Post updatePost(UpdatePostDTO updatePostDTO) {
-        Post post = postRepository.findById(updatePostDTO.getId()) ;
+        Post post = postRepository.findById(updatePostDTO.getId());
         post.setTitle(updatePostDTO.getTitle());
         post.setForeword(updatePostDTO.getForeword());
         ReadingList readingList = readingListRepository.findById(updatePostDTO.getReadingListId()).orElse(null);
@@ -97,7 +114,7 @@ public class PostService {
         post.setTopic(topic);
         post.setTags(tags);
         User author = authUtils.getUserFromToken();
-        if(author.getId().equals(post.getAuthor().getId())){
+        if (author.getId().equals(post.getAuthor().getId())) {
             postRepository.save(post);
         }
         return post;

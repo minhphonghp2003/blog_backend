@@ -1,6 +1,8 @@
 package com.phong.blog.Blog.DTO;
 
 import com.phong.blog.Blog.Model.Comment;
+import com.phong.blog.User.DTO.SocialUpdateDTO;
+import com.phong.blog.User.Model.Social;
 import lombok.Data;
 
 import javax.naming.Name;
@@ -24,9 +26,19 @@ class IdDTO {
 }
 
 @Data
+class SocialDTO{
+    private int id;
+    private String name ;
+    private String link;
+}
+
+
+@Data
 class AuthorDTO{
+    private List<SocialDTO> socials;
     private UUID id;
     private String fullName;
+    private String bio;
     private String avatar;
 }
 
