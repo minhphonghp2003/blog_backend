@@ -52,14 +52,7 @@ public class PostController {
         Post post = postService.getPost(id);
         return modelMapper.map(post, PostDTO.class);
     }
-    @GetMapping("/postby")
-    public Page<PostDTO> getPostBy(AllPostByReq allPostByReq){
-        Page<Post> postPage = postService.getAllPostBy(allPostByReq);
-        return  postPage.map(post -> {
-            PostDTO postDTO = modelMapper.map(post, PostDTO.class);
-            return postDTO;
-        });
-    }
+
 
     @DeleteMapping("/")
     @Secured({"ADMIN", "AUTHOR"})

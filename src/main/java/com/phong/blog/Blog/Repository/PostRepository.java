@@ -14,7 +14,6 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
     public Post findById(int id);
-
     public Page<Post> findByAuthor(User author, Pageable pageable);
     public Page<Post> findByTopic(Topic topic, Pageable pageable);
     public Page<Post> findByReadingList(ReadingList readingList, Pageable pageable);

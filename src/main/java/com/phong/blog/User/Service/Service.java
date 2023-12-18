@@ -140,4 +140,8 @@ public class Service {
     public void deleteUserSocial(Integer id){
         socialRepository.deleteById(id);
     }
+
+    public User getAuthorDetail(UUID id){
+        return userRepository.findById(id).orElse(null);
+    }
 }

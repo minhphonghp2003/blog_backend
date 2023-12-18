@@ -2,10 +2,7 @@ package com.phong.blog.Blog.DTO;
 
 import lombok.Data;
 
-enum  GetBy{
-    topic,
-    readinglist
-}
+
 @Data
 public class AllPostByReq {
     private int id;

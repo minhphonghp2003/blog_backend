@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -67,22 +66,24 @@ public class PostService {
     }
 
     public Page<Post> getAllPost(AllPostReqDTO allPostReqDTO) {
-
-        Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(String.valueOf(allPostReqDTO.getSortBy())).descending());
-        return postRepository.findAll(pageable);
-    }
-
-    public Page<Post> getAllPostBy(AllPostByReq allPostByReq) {
         Page<Post> posts = null;
-        Pageable pageable = PageRequest.of(allPostByReq.getPage(), allPostByReq.getLimit(), Sort.by(String.valueOf(allPostByReq.getSortBy())).descending());
-        if (String.valueOf(allPostByReq.getGetBy()).equals("topic")) {
-            posts = postRepository.findByTopic(topicRepository.findById(allPostByReq.getId()).orElse(null), pageable);
+        Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(String.valueOf(allPostReqDTO.getSortBy())).descending());
+        if (String.valueOf(allPostReqDTO.getGetBy()).equals("topic")) {
+            posts = postRepository.findByTopic(topicRepository.findById( allPostReqDTO.getId()).orElse(null), pageable);
         }
-        if (String.valueOf(allPostByReq.getGetBy()).equals("readinglist")) {
-            posts = postRepository.findByReadingList(readingListRepository.findById(allPostByReq.getId()).orElse(null), pageable);
+        else if (String.valueOf(allPostReqDTO.getGetBy()).equals("readinglist")) {
+            posts = postRepository.findByReadingList(readingListRepository.findById( allPostReqDTO.getId()).orElse(null), pageable);
+        }
+        else if (String.valueOf(allPostReqDTO.getGetBy()).equals("author")) {
+            posts = postRepository.findByAuthor(userRepository.findById( allPostReqDTO.getUuId()).orElse(null), pageable);
+        }
+        else{
+            posts = postRepository.findAll(pageable);
         }
         return posts;
     }
+
+
 
     public void deletePost(Integer id) {
         User user = authUtils.getUserFromToken();
