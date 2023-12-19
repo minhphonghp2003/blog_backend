@@ -49,8 +49,7 @@ public class PostController {
 
     @GetMapping("/")
     public PostDTO getPost(int id) {
-        Post post = postService.getPost(id);
-        return modelMapper.map(post, PostDTO.class);
+        return postService.getPost(id);
     }
 
 

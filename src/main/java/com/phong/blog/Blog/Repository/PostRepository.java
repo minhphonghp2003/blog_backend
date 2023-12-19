@@ -10,10 +10,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
     public Post findById(int id);
+    public Optional<List<Post>> findByIdGreaterThan(int id);
     public Page<Post> findByAuthor(User author, Pageable pageable);
     public Page<Post> findByTopic(Topic topic, Pageable pageable);
     public Page<Post> findByReadingList(ReadingList readingList, Pageable pageable);
@@ -21,4 +23,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     public void deleteById(Integer id);
 
     public Page<Post> findAll(Pageable pageable);
+
 }

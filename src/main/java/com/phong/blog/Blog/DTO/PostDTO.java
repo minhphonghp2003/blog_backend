@@ -60,4 +60,7 @@ public class PostDTO {
     private AuthorDTO author;
     private Instant createdAt;
     private Instant updatedAt;
+    private Integer nextId;
+    private String nextImageLink;
+    private String nextTitle;
 }

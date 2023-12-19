@@ -69,20 +69,16 @@ public class PostService {
         Page<Post> posts = null;
         Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(String.valueOf(allPostReqDTO.getSortBy())).descending());
         if (String.valueOf(allPostReqDTO.getGetBy()).equals("topic")) {
-            posts = postRepository.findByTopic(topicRepository.findById( allPostReqDTO.getId()).orElse(null), pageable);
-        }
-        else if (String.valueOf(allPostReqDTO.getGetBy()).equals("readinglist")) {
-            posts = postRepository.findByReadingList(readingListRepository.findById( allPostReqDTO.getId()).orElse(null), pageable);
-        }
-        else if (String.valueOf(allPostReqDTO.getGetBy()).equals("author")) {
-            posts = postRepository.findByAuthor(userRepository.findById( allPostReqDTO.getUuId()).orElse(null), pageable);
-        }
-        else{
+            posts = postRepository.findByTopic(topicRepository.findById(allPostReqDTO.getId()).orElse(null), pageable);
+        } else if (String.valueOf(allPostReqDTO.getGetBy()).equals("readinglist")) {
+            posts = postRepository.findByReadingList(readingListRepository.findById(allPostReqDTO.getId()).orElse(null), pageable);
+        } else if (String.valueOf(allPostReqDTO.getGetBy()).equals("author")) {
+            posts = postRepository.findByAuthor(userRepository.findById(allPostReqDTO.getUuId()).orElse(null), pageable);
+        } else {
             posts = postRepository.findAll(pageable);
         }
         return posts;
     }
-
 
 
     public void deletePost(Integer id) {
@@ -96,8 +92,17 @@ public class PostService {
         }
     }
 
-    public Post getPost(int id) {
-        return postRepository.findById(id);
+    public PostDTO getPost(int id) {
+        List<Post> nextPosts = postRepository.findByIdGreaterThan(id).orElse(null);
+        Post post = postRepository.findById(id);
+        PostDTO postDTO = modelMapper.map(post, PostDTO.class);
+        if (nextPosts.size() > 0) {
+            Post nextPost = nextPosts.get(0);
+            postDTO.setNextId(nextPost.getId());
+            postDTO.setNextTitle(nextPost.getTitle());
+            postDTO.setNextImageLink(nextPost.getImageLink());
+        }
+        return postDTO;
     }
 
     public Post updatePost(UpdatePostDTO updatePostDTO) {
