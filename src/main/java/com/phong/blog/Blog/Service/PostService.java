@@ -8,6 +8,7 @@ import com.phong.blog.User.Repository.UserRepository;
 import com.phong.blog.Utils.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,12 @@ public class PostService {
 
     @Transactional
     public Post createPost(NewPostDTO newPostDTO) {
+        TypeMap<NewPostDTO, Post> propertyMapper = modelMapper.getTypeMap(NewPostDTO.class, Post.class);
+        if (propertyMapper == null) { // if not  already added
+            propertyMapper = modelMapper.createTypeMap(NewPostDTO.class, Post.class);
+            propertyMapper.addMappings(mapper -> mapper.skip(Post::setId));
+        }
+
         Post newPost = modelMapper.map(newPostDTO, Post.class);
         User author = authUtils.getUserFromToken();
         ReadingList readingList = readingListRepository.findById(newPostDTO.getReadingListId()).orElse(null);
@@ -54,7 +61,7 @@ public class PostService {
         newPost.setReadingList(readingList);
         newPost.setTopic(topic);
         newPost.setTags(tags);
-        postRepository.save(newPost);
+        Post returnPost = postRepository.save(newPost);
         return newPost;
     }
 
