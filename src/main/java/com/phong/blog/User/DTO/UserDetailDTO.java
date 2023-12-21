@@ -1,6 +1,5 @@
 package com.phong.blog.User.DTO;
 
-import com.phong.blog.Blog.Model.Comment;
 import com.phong.blog.Blog.Model.Tag;
 import com.phong.blog.User.Model.Status;
 import lombok.Data;
@@ -23,7 +22,6 @@ class PostDTO{
     private Integer likeCount;
     private Integer shareCount;
     private Integer viewCount;
-    private List<Comment> comments;
     private Set<Tag> tags;
 }
 

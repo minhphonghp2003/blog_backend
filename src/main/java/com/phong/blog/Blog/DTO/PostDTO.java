@@ -1,13 +1,8 @@
 package com.phong.blog.Blog.DTO;
 
-import com.phong.blog.Blog.Model.Comment;
-import com.phong.blog.User.DTO.SocialUpdateDTO;
-import com.phong.blog.User.Model.Social;
 import lombok.Data;
 
-import javax.naming.Name;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;

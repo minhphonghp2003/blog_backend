@@ -24,7 +24,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final TopicRepository topicRepository;
@@ -36,9 +35,7 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public List<Comment> getComments(int postId) {
-        return postRepository.findById(postId).getComments();
-    }
+
 
     @Transactional
     public Post createPost(NewPostDTO newPostDTO) {
