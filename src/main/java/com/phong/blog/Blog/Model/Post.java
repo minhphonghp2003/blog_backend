@@ -47,9 +47,11 @@ public class Post {
     private String imageLink;
     private String postLink;
     private String title;
-    private Integer likeCount = 0;
-    private Integer shareCount = 0;
-    private Integer viewCount = 0;
+    @ManyToMany()
+    @JoinTable(
+            name = "post_like", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "reader_id")
+    )
+    private Set<Reader> likeReader;
     private String foreword;
     @CreationTimestamp(source = SourceType.DB)
     private Instant createdAt;

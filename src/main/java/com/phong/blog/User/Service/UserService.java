@@ -26,7 +26,7 @@ import java.util.*;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
-public class Service {
+public class UserService {
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
     private final SocialRepository socialRepository;
@@ -101,6 +101,7 @@ public class Service {
         credentialRepository.updatePassword(token, hashed);
     }
 
+// TODO:fetch author post
     public UserDetailDTO getUserDetails(String token) {
         UUID id = UUID.fromString(jwtUtils.extractId(token));
         User user = userRepository.findById(id).orElse(null);
@@ -109,6 +110,7 @@ public class Service {
         userDetailDTO.setUsername(credential.getUsername());
         userDetailDTO.setEmail(credential.getEmail());
         userDetailDTO.setRoles(new HashSet<>());
+
         for (Role role :
                 user.getRoles()) {
             userDetailDTO.getRoles().add(String.valueOf(role.getName()));

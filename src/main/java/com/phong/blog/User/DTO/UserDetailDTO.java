@@ -1,5 +1,6 @@
 package com.phong.blog.User.DTO;
 
+import com.phong.blog.Blog.Model.Reader;
 import com.phong.blog.Blog.Model.Tag;
 import com.phong.blog.User.Model.Status;
 import lombok.Data;
@@ -19,7 +20,7 @@ class SocialDTO{
 @Data
 class PostDTO{
     private int id;
-    private Integer likeCount;
+    private List<Reader> likeReader;
     private Integer shareCount;
     private Integer viewCount;
     private Set<Tag> tags;

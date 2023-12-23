@@ -2,6 +2,7 @@ package com.phong.blog.Blog.Service;
 
 import com.phong.blog.Blog.DTO.*;
 import com.phong.blog.Blog.Model.*;
+import com.phong.blog.Blog.Model.BlogStatistic;
 import com.phong.blog.Blog.Repository.*;
 import com.phong.blog.User.Model.User;
 import com.phong.blog.User.Repository.UserRepository;
@@ -12,13 +13,10 @@ import org.modelmapper.TypeMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,14 +26,10 @@ public class PostService {
     private final UserRepository userRepository;
     private final TopicRepository topicRepository;
     private final ReadingListRepository readingListRepository;
+    private final StatisticRepository statisticRepository;
+    private final ReaderRepository readerRepository;
     private final ModelMapper modelMapper;
     private final AuthUtils authUtils;
-
-    public Post findById(int id) {
-        return postRepository.findById(id);
-    }
-
-
 
     @Transactional
     public Post createPost(NewPostDTO newPostDTO) {
@@ -58,29 +52,18 @@ public class PostService {
         newPost.setReadingList(readingList);
         newPost.setTopic(topic);
         newPost.setTags(tags);
-        Post returnPost = postRepository.save(newPost);
-        return newPost;
-    }
+        postRepository.save(newPost);
 
-    @Transactional
-    public Page<Post> getPostOfAuthor(AuthorPostDTO authorPostDTO) {
-        User author = userRepository.findById(authorPostDTO.getAuthorId()).orElse(null);
-        Pageable pageable = PageRequest.of(authorPostDTO.getPage(), authorPostDTO.getLimit(), Sort.by("updatedAt").descending());
-        return postRepository.findByAuthor(author, pageable);
+        BlogStatistic statistic = new BlogStatistic();
+        statistic.setId(newPost.getId());
+        statisticRepository.save(statistic);
+        return newPost;
     }
 
     public Page<Post> getAllPost(AllPostReqDTO allPostReqDTO) {
         Page<Post> posts = null;
-        Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(String.valueOf(allPostReqDTO.getSortBy())).descending());
-        if (String.valueOf(allPostReqDTO.getGetBy()).equals("topic")) {
-            posts = postRepository.findByTopic(topicRepository.findById(allPostReqDTO.getId()).orElse(null), pageable);
-        } else if (String.valueOf(allPostReqDTO.getGetBy()).equals("readinglist")) {
-            posts = postRepository.findByReadingList(readingListRepository.findById(allPostReqDTO.getId()).orElse(null), pageable);
-        } else if (String.valueOf(allPostReqDTO.getGetBy()).equals("author")) {
-            posts = postRepository.findByAuthor(userRepository.findById(allPostReqDTO.getUuId()).orElse(null), pageable);
-        } else {
-            posts = postRepository.findAll(pageable);
-        }
+        Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit());
+        posts = postRepository.findBySomething(pageable, allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId());
         return posts;
     }
 
@@ -99,7 +82,15 @@ public class PostService {
     public PostDTO getPost(int id) {
         List<Post> nextPosts = postRepository.findByIdGreaterThan(id).orElse(null);
         Post post = postRepository.findById(id);
+        BlogStatistic blogStatistic = statisticRepository.findById(id).orElse(null);
+        if (post == null || blogStatistic == null) {
+            return null;
+        }
+        post.setLikeReader(blogStatistic.getLikeReader());
         PostDTO postDTO = modelMapper.map(post, PostDTO.class);
+        postDTO.setViewCount(blogStatistic.getViewCount());
+        postDTO.setShareCount(blogStatistic.getShareCount());
+
         if (nextPosts.size() > 0) {
             Post nextPost = nextPosts.get(0);
             postDTO.setNextId(nextPost.getId());
@@ -128,5 +119,45 @@ public class PostService {
             postRepository.save(post);
         }
         return post;
+    }
+
+    public void updatePostStatistic(BlogStatistic postStatisticDTO) {
+
+    }
+
+    public void updatePostLike(PostLikeDTO postLikeDTO) {
+        BlogStatistic blogStatistic = statisticRepository.findById(postLikeDTO.getPostId()).orElse(null);
+        if (blogStatistic == null) {
+            return;
+        }
+        Set<Reader> likes = blogStatistic.getLikeReader();
+        for (Reader r :
+                likes) {
+            if (r.getId().equals(UUID.fromString(postLikeDTO.getReaderId()))) {
+                likes.remove(r);
+                blogStatistic.setLikeReader(likes);
+                statisticRepository.save(blogStatistic);
+                return;
+            }
+        }
+        Reader reader = readerRepository.findById(UUID.fromString(postLikeDTO.getReaderId())).orElse(null);
+        if (reader == null) {
+            return;
+        }
+        blogStatistic.getLikeReader().add(reader);
+        statisticRepository.save(blogStatistic);
+    }
+
+    public BlogStatistic getPostStatistic(Integer id) {
+        return statisticRepository.findById(id).orElse(null);
+    }
+
+
+    public BlogStatistic createPostStatistic(BlogStatistic postStatisticDTO) {
+        BlogStatistic blogStatistic = modelMapper.map(postStatisticDTO, BlogStatistic.class);
+        return statisticRepository.save(blogStatistic);
+    }
+
+    public void updatePostComment(Comment comment) {
     }
 }

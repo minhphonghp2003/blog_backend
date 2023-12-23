@@ -1,11 +1,11 @@
 package com.phong.blog.Blog.DTO;
 
+import com.phong.blog.Blog.Model.Comment;
+import com.phong.blog.Blog.Model.Reader;
 import lombok.Data;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @Data
@@ -36,7 +36,11 @@ class AuthorDTO{
     private String bio;
     private String avatar;
 }
-
+@Data
+class LikeReaderDTO{
+    private String name;
+    private UUID id;
+}
 
 @Data
 public class PostDTO {
@@ -44,14 +48,14 @@ public class PostDTO {
     private String imageLink;
     private String postLink;
     private String title;
-    private Integer likeCount;
+    private List<LikeReaderDTO> likeReader;
     private Integer shareCount;
     private Integer viewCount;
     private String foreword;
+    private List<Comment> comments;
     private NameDTO topic;
     private Set<NameDTO> tags;
     private NameDTO readingList;
-    private List<IdDTO> comments;
     private AuthorDTO author;
     private Instant createdAt;
     private Instant updatedAt;

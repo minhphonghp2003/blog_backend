@@ -4,24 +4,20 @@ import lombok.Data;
 
 import java.util.UUID;
 
-enum SortBy{
-    updatedAt,
-    likeCount,
-    viewCount,
-    shareCount
+enum SortBy {
+    updated_at,
+    like_count,
+    view_count,
+    share_count
 
 }
 
-enum  GetBy{
-    topic,
-    readinglist,
-    author
-}
+
 @Data
 public class AllPostReqDTO {
-    private Integer id;
-    private UUID uuId;
-    private GetBy getBy;
+    private String topicId;
+    private String readingListId;
+    private String authorId;
     private SortBy sortBy;
     private int page;
     private int limit;

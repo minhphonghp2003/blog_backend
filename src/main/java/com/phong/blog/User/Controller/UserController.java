@@ -1,14 +1,12 @@
 package com.phong.blog.User.Controller;
 
 import com.phong.blog.User.DTO.*;
-import com.phong.blog.User.Service.Service;
+import com.phong.blog.User.Service.UserService;
 import com.phong.blog.User.Model.User;
 import com.phong.blog.Utils.AuthUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
-    private final Service userService;
+    private final UserService userService;
     private final ModelMapper modelMapper;
     private final AuthUtils authUtils;
 
