@@ -1,11 +1,12 @@
 package com.phong.blog.User.Service;
 
-import com.phong.blog.User.DTO.RegisterDTO;
-import com.phong.blog.User.DTO.SocialUpdateDTO;
-import com.phong.blog.User.DTO.UserDetailDTO;
-import com.phong.blog.User.DTO.UserDetailUpdateDTO;
+import com.phong.blog.Blog.DTO.PostDTO;
+import com.phong.blog.Blog.Model.Post;
+import com.phong.blog.Blog.Service.PostService;
+import com.phong.blog.User.DTO.*;
 import com.phong.blog.User.Repository.*;
 import com.phong.blog.User.Model.*;
+import com.phong.blog.Utils.AuthUtils;
 import com.phong.blog.Utils.JwtUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,11 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
+    private final AuthUtils authUtils;
     private final SocialRepository socialRepository;
     private final CredentialRepository credentialRepository;
     private final RoleRepository roleRepository;
+    private final PostService postService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final ModelMapper modelMapper;
@@ -47,6 +50,7 @@ public class UserService {
         Status status = statusRepository.findByName(EStatus.valueOf(registerDTO.getStatus()));
         User user = modelMapper.map(registerDTO, User.class);
         user.setStatus(status);
+        user.setAvatar("avatar/" + registerDTO.getUsername());
         user.setRoles(new HashSet<>());
         registerDTO.getRoles().stream().forEach(r -> {
             Role role = roleRepository.findByName(ERole.valueOf(r));
@@ -101,35 +105,33 @@ public class UserService {
         credentialRepository.updatePassword(token, hashed);
     }
 
-// TODO:fetch author post
-    public UserDetailDTO getUserDetails(String token) {
-        UUID id = UUID.fromString(jwtUtils.extractId(token));
-        User user = userRepository.findById(id).orElse(null);
-        UserCredential credential = user.getCredential();
+    //    TODO: fetch user works statistic
+    public UserDetailDTO getUserDetails() {
+        User user = authUtils.getUserFromToken();
+        if (user == null) {
+            return null;
+        }
+
         UserDetailDTO userDetailDTO = modelMapper.map(user, UserDetailDTO.class);
+        modelMapper.map(user, userDetailDTO.getUserInformation());
+
+        UserCredential credential = user.getCredential();
         userDetailDTO.setUsername(credential.getUsername());
         userDetailDTO.setEmail(credential.getEmail());
-        userDetailDTO.setRoles(new HashSet<>());
-
-        for (Role role :
-                user.getRoles()) {
-            userDetailDTO.getRoles().add(String.valueOf(role.getName()));
-        }
 
         return userDetailDTO;
     }
 
-
     public void updateUserDetail(UserDetailUpdateDTO userDetailUpdateDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = ((UserDetails)(authentication.getPrincipal())).getUser();
-        modelMapper.map(userDetailUpdateDTO,user);
+        User user = ((UserDetails) (authentication.getPrincipal())).getUser();
+        modelMapper.map(userDetailUpdateDTO, user);
         userRepository.save(user);
     }
 
-    public void addUserSocial(SocialUpdateDTO socialUpdateDTO){
+    public void addUserSocial(SocialUpdateDTO socialUpdateDTO) {
         User user = userRepository.findById(socialUpdateDTO.getUserId()).orElse(null);
-        if(user==null){
+        if (user == null) {
             return;
         }
         Social social = new Social();
@@ -139,11 +141,11 @@ public class UserService {
         socialRepository.save(social);
     }
 
-    public void deleteUserSocial(Integer id){
+    public void deleteUserSocial(Integer id) {
         socialRepository.deleteById(id);
     }
 
-    public User getAuthorDetail(UUID id){
+    public User getAuthorDetail(UUID id) {
         return userRepository.findById(id).orElse(null);
     }
 }

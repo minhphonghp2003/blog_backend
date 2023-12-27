@@ -52,6 +52,9 @@ public class Post {
             name = "post_like", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "reader_id")
     )
     private Set<Reader> likeReader;
+    @OneToOne
+    @JoinColumn(name = "statistic_id", referencedColumnName = "id")
+    private PostStatistic postStatistic;
     private String foreword;
     @CreationTimestamp(source = SourceType.DB)
     private Instant createdAt;

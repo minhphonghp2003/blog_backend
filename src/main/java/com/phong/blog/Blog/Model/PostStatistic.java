@@ -1,6 +1,6 @@
 package com.phong.blog.Blog.Model;
 
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,15 +11,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Document("statistic")
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
 @Data
-public class BlogStatistic {
+@Table(name = "post_statistic")
+public class PostStatistic {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer shareCount = 0;
     private Integer viewCount = 0;
-    private List<Comment> comments = new ArrayList<>();
-    private Set<Reader> likeReader = new HashSet<>();
 }

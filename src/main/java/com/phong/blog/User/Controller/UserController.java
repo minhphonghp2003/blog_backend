@@ -85,9 +85,10 @@ public class UserController {
         }
     }
 
+    @Secured({"ADMIN","AUTHOR"})
     @GetMapping("/userDetail")
-    public UserDetailDTO getUserDetail(@RequestHeader(name = "Authorization") String token, HttpServletRequest request) {
-        return userService.getUserDetails(token);
+    public UserDetailDTO getUserDetail() {
+        return userService.getUserDetails();
     }
 
     @Secured({"ADMIN", "AUTHOR"})

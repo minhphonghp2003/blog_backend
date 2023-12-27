@@ -15,10 +15,10 @@ enum SortBy {
 
 @Data
 public class AllPostReqDTO {
+    private SortBy sortBy;
     private String topicId;
     private String readingListId;
     private String authorId;
-    private SortBy sortBy;
     private int page;
     private int limit;
 }

@@ -1,6 +1,7 @@
 package com.phong.blog.Blog.DTO;
 
 import com.phong.blog.Blog.Model.Comment;
+import com.phong.blog.Blog.Model.PostStatistic;
 import com.phong.blog.Blog.Model.Reader;
 import lombok.Data;
 
@@ -48,9 +49,8 @@ public class PostDTO {
     private String imageLink;
     private String postLink;
     private String title;
-    private List<LikeReaderDTO> likeReader;
-    private Integer shareCount;
-    private Integer viewCount;
+    private Set<LikeReaderDTO> likeReader;
+    private PostStatistic postStatistic;
     private String foreword;
     private List<Comment> comments;
     private NameDTO topic;
