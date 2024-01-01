@@ -26,6 +26,7 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{secret.DOCKER_IMAGE}}
+    - run: ls -la
         
             
          
