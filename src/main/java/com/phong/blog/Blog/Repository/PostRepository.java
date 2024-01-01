@@ -20,8 +20,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     public Optional<List<Post>> findByIdGreaterThan(int id);
 
-    @Query(nativeQuery = true, value = "select  p.*, count(reader_id) as like_count,max(s.view_count) as view_count,max( s.share_count) as share_count from post p left join post_statistic s on p.id = s.id left join post_like l on p.id = l.post_id  where case WHEN :readingListId ~ '^[0-9\\.]+$' THEN reading_list_id = cast(:readingListId as int) WHEN :authorId ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' THEN user_id = uuid(:authorId) WHEN :topicId ~ '^[0-9\\.]+$' THEN topic_id = cast( :topicId as int )ELSE true END group by p.id ")
-    public Page<Post> findBySomething(Pageable pageable, @Param("readingListId") String readingListId, @Param("authorId") String authorId, @Param("topicId") String topicId);
+    @Query(nativeQuery = true, value = "select  p.*, count(reader_id) as like_count,max(s.view_count) as view_count,max( s.share_count) as share_count from post p left join post_statistic s on p.statistic_id = s.id left join post_like l on p.id = l.post_id  where  (:readingListId is null or reading_list_id = :readingListId) and  (:topicId is null or topic_id = :topicId) and  (:authorId is null or user_id = uuid(:authorId)) group by p.id ")
+    public Page<Post> findBySomething(Pageable pageable, @Param("readingListId") Integer readingListId, @Param("authorId") String authorId, @Param("topicId") Integer topicId);
 
     public void deleteById(Integer id);
 

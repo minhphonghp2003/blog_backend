@@ -63,8 +63,8 @@ public class PostService {
 
     public Page<Post> getAllPost(AllPostReqDTO allPostReqDTO) {
         Page<Post> posts = null;
-        Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(new String[]{String.valueOf(allPostReqDTO.getSortBy())}).descending() );
-        posts = postRepository.findBySomething(pageable, allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId());
+        Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(new String[]{String.valueOf(allPostReqDTO.getSortBy())}).descending());
+        posts = postRepository.findBySomething(pageable,allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId());
         return posts;
     }
 
@@ -116,23 +116,24 @@ public class PostService {
 
     public void updatePostStatistic(PostStatistic postStatisticDTO) {
         PostStatistic postStatistic = statisticRepository.findById(postStatisticDTO.getId()).orElse(null);
-        modelMapper.map(postStatisticDTO,postStatistic) ;
-       statisticRepository.save(postStatistic);
+        modelMapper.map(postStatisticDTO, postStatistic);
+        statisticRepository.save(postStatistic);
     }
 
     public void updatePostLike(PostLikeDTO postLikeDTO) {
         Post post = postRepository.findById(postLikeDTO.getPostId()).orElse(null);
-        Reader reader = readerRepository.findById(UUID.fromString(postLikeDTO.getReaderId())).orElse(null) ;
+        Reader reader = readerRepository.findById(UUID.fromString(postLikeDTO.getReaderId())).orElse(null);
         if (reader == null || post == null) {
             return;
         }
-        if(post.getLikeReader().contains(reader)){
+        if (post.getLikeReader().contains(reader)) {
             post.getLikeReader().remove(reader);
-        }else{
+        } else {
             post.getLikeReader().add(reader);
         }
         postRepository.save(post);
     }
+
     public void updatePostComment(Comment comment) {
     }
 }

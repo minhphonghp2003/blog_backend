@@ -16,8 +16,8 @@ enum SortBy {
 @Data
 public class AllPostReqDTO {
     private SortBy sortBy;
-    private String topicId;
-    private String readingListId;
+    private Integer topicId;
+    private Integer readingListId;
     private String authorId;
     private int page;
     private int limit;
