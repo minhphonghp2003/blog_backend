@@ -44,11 +44,11 @@ jobs:
         # ssh remote password
         pass: ${{secrets.VPS_SSH_PASSWORD}}
       
-
         # execute commands on ssh
         script: |
-                pwd
-                ls -la
+                docker stop $(docker ps -a -q --filter ancestor=${{secrets.DOCKER_IMAGE}} --format="{{.ID}}")
+                docker pull ${{secrets.DOCKER_IMAGE}}
+                docker run --env-file .env -dp 80:8080 --name ${{ github.event.head_commit.message }} ${{secrets.DOCKER_IMAGE}} 
        
             
                 
