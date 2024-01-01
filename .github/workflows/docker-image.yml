@@ -46,7 +46,9 @@ jobs:
       
 
         # execute commands on ssh
-        script: pwd              
+        script: |
+                pwd
+                ls -la
        
             
                 
