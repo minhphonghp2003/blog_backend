@@ -14,7 +14,7 @@ jobs:
 
     steps:          
     - uses: actions/checkout@v3
-    - run: cat ${{secrets.DOCKERHUB_USERNAME}}
+    - run: cat ${{secrets.DEMO}}
   
     - name: Docker Login
       uses: docker/login-action@v3.0.0
