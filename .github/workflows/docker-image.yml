@@ -14,6 +14,7 @@ jobs:
 
     steps:          
     - uses: actions/checkout@v3
+    - run: chmod 777 mvnw
     - name: Docker Login
       uses: docker/login-action@v3.0.0
       with:
