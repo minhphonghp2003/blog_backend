@@ -58,6 +58,7 @@ public class PostService {
         statisticRepository.save(statistic);
         newPost.setPostStatistic(statistic);
         postRepository.save(newPost);
+
         return newPost;
     }
 

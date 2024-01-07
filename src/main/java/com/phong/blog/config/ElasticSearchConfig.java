@@ -26,13 +26,19 @@ import java.util.Map;
 @EnableElasticsearchRepositories(basePackages = "com.phong.blog.Searching.Repository")
 @ComponentScan(basePackages = { "com.phong.blog" })
 public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
+    @Value("${es.host}")
+    private String host;
+    @Value("${es.username}")
+    private String username;
+    @Value("${es.password}")
+    private String password;
     @Override
     @Bean
     public RestHighLevelClient elasticsearchClient() {
         final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-               .connectedTo("blog-6234584370.us-east-1.bonsaisearch.net:443")
+               .connectedTo(host)
                 .usingSsl()
-                .withBasicAuth("g85ydjzeir","e7h431s4kf")
+                .withBasicAuth(username,password)
                 .build();
 
         return RestClients.create(clientConfiguration).rest();
