@@ -5,9 +5,16 @@ import com.phong.blog.Blog.Model.Topic;
 import com.phong.blog.User.Model.User;
 import jakarta.persistence.Id;
 import lombok.Data;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.Instant;
+import java.util.Date;
+import java.util.Objects;
+
+import static java.util.Objects.*;
 
 @Data
 @Document(indexName = "post")
@@ -20,5 +27,6 @@ public class SearchPost {
     private String imageLink;
     private String title;
     private String foreword;
-    private Instant updatedAt;
+    @Field(type=FieldType.Date, pattern="dd.MM.uuuu")
+    private Date updatedAt;
 }

@@ -1,11 +1,11 @@
 package com.phong.blog.Searching.Controller;
 
 import com.phong.blog.Searching.DTO.PostSearchDTO;
-import com.phong.blog.Searching.Model.Demo;
 import com.phong.blog.Searching.Model.SearchPost;
 import com.phong.blog.Searching.Service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,17 +19,19 @@ public class SearchController {
     public void delete(@RequestBody Integer id){
         searchService.deleteSearchPostById(id);
     }
+
+    @Secured({"ADMIN", "AUTHOR"})
     @PostMapping("/post")
-    public SearchPost createDemo(@RequestBody SearchPost searchPost){
+    public SearchPost createSearchPost(@RequestBody SearchPost searchPost){
         return searchService.createSearchPost(searchPost);
     }
     @GetMapping("/post/all")
-    public Page<SearchPost> getAllDemo(){
+    public Page<SearchPost> getAllSearchPost(){
         return searchService.getAllSearchPost();
     }
 
     @GetMapping("/post")
-    public Page<SearchPost> searchPosts(@RequestBody PostSearchDTO postSearchDTO){
+    public Page<SearchPost> searchPosts( PostSearchDTO postSearchDTO){
         return searchService.searchPosts(postSearchDTO);
     }
 }

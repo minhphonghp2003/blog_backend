@@ -14,6 +14,7 @@ public class SearchService {
     private final SearchRepository searchRepository;
 
     public SearchPost createSearchPost(SearchPost post) {
+        System.out.println(post);
         return searchRepository.save(post);
     }
     public void deleteSearchPostById(Integer id) {

@@ -39,7 +39,6 @@ public class PostService {
             propertyMapper = modelMapper.createTypeMap(NewPostDTO.class, Post.class);
             propertyMapper.addMappings(mapper -> mapper.skip(Post::setId));
         }
-
         Post newPost = modelMapper.map(newPostDTO, Post.class);
         User author = authUtils.getUserFromToken();
         ReadingList readingList = readingListRepository.findById(newPostDTO.getReadingListId()).orElse(null);
