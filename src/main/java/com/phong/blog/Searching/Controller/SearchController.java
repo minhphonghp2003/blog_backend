@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class SearchController {
     private final SearchService searchService;
 
+    @Secured({"ADMIN", "AUTHOR"})
     @DeleteMapping("/post")
     public void delete(@RequestBody Integer id){
         searchService.deleteSearchPostById(id);

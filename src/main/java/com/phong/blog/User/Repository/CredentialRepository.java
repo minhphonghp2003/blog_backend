@@ -8,12 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
 public interface CredentialRepository extends JpaRepository<UserCredential, Integer> {
     UserCredential findByUsername(String username);
     UserCredential findByUser(User user);
 
-    UserCredential findByEmail(String email);
+    UserCredential findByUserId(UUID userId);
+
+
 
     @Modifying
     @Query("update UserCredential d set d.passRecvToken = :token where d.email = :email ")

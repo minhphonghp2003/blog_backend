@@ -126,6 +126,10 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = ((UserDetails) (authentication.getPrincipal())).getUser();
         modelMapper.map(userDetailUpdateDTO, user);
+        System.out.println(user.getId());
+        UserCredential userCredential =credentialRepository.findByUserId(user.getId());
+        userCredential.setEmail(userDetailUpdateDTO.getEmail());
+        credentialRepository.save(userCredential);
         userRepository.save(user);
     }
 
