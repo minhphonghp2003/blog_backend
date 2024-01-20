@@ -18,7 +18,7 @@ public class Status {
     private int id;
     @Enumerated(EnumType.STRING)
     private EStatus name;
-    @JsonIgnore
-    @OneToMany(mappedBy = "status")
-    private Set<User> user;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "status")
+//    private Set<User> user;
 }

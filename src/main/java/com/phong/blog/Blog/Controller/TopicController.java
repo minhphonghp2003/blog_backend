@@ -6,6 +6,8 @@ import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.ReadingList;
 import com.phong.blog.Blog.Model.Topic;
 import com.phong.blog.Blog.Service.TopicService;
+import com.phong.blog.Logging.Model.UserActivity;
+import com.phong.blog.Logging.Service.UserActivityService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -20,6 +22,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TopicController {
     private final TopicService topicService;
+    private final UserActivityService userActivityService;
     private final ModelMapper modelMapper;
 
     @GetMapping("/all")
@@ -36,6 +39,7 @@ public class TopicController {
     @Secured({"ADMIN", "AUTHOR"})
     @PostMapping("/")
     public Topic createTopic(@RequestBody TopicDTO topicDTO) {
+        userActivityService.createUserActivity(new UserActivity("Create topic " + topicDTO.getName()));
         return topicService.createTopic(modelMapper.map(topicDTO, Topic.class));
     }
 
@@ -57,6 +61,7 @@ public class TopicController {
     @DeleteMapping("/")
     public void deleteTopic(@RequestBody int id) {
         topicService.removeTopic(id);
+        userActivityService.createUserActivity(new UserActivity("Delete topic " + id));
     }
 
 }

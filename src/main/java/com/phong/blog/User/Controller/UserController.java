@@ -1,5 +1,7 @@
 package com.phong.blog.User.Controller;
 
+import com.phong.blog.Logging.Model.UserActivity;
+import com.phong.blog.Logging.Service.UserActivityService;
 import com.phong.blog.User.DTO.*;
 import com.phong.blog.User.Service.UserService;
 import com.phong.blog.User.Model.User;
@@ -7,6 +9,7 @@ import com.phong.blog.Utils.AuthUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,7 @@ import java.util.UUID;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
     private final UserService userService;
+    private final UserActivityService userActivityService;
     private final ModelMapper modelMapper;
     private final AuthUtils authUtils;
 
@@ -36,8 +40,10 @@ public class UserController {
 
     @Secured({"ADMIN"})
     @GetMapping("/alluser")
-    public List<User> getAllUser() {
-        return userService.getAllUser();
+    public List<AllUserDTO> getAllUser() {
+        return modelMapper.map(userService.getAllUser(), new TypeToken<List<AllUserDTO>>() {
+        }.getType());
+
     }
 
     @PostMapping("/register")
@@ -79,13 +85,14 @@ public class UserController {
     public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
         try {
             userService.resetPassword(updatePasswordDTO.getToken(), updatePasswordDTO.getPassword());
+
             return ResponseEntity.ok("Success");
         } catch (Exception e) {
             return ResponseEntity.status(400).body("Unsuccessful");
         }
     }
 
-    @Secured({"ADMIN","AUTHOR"})
+    @Secured({"ADMIN", "AUTHOR"})
     @GetMapping("/userDetail")
     public UserDetailDTO getUserDetail() {
         return userService.getUserDetails();
@@ -95,6 +102,7 @@ public class UserController {
     @PutMapping("/userDetail")
     public void updateUserDetail(@RequestBody UserDetailUpdateDTO userDetailUpdateDTO) {
         userService.updateUserDetail(userDetailUpdateDTO);
+        userActivityService.createUserActivity(new UserActivity("Change user details"));
     }
 
     @DeleteMapping("/userSocial")
@@ -108,7 +116,7 @@ public class UserController {
     }
 
     @GetMapping("/author")
-    public AuthorDTO getAuthor(String  id) {
+    public AuthorDTO getAuthor(String id) {
         return modelMapper.map(userService.getAuthorDetail(UUID.fromString(id)), AuthorDTO.class);
     }
 }

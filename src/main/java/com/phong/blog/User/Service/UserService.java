@@ -34,7 +34,6 @@ public class UserService {
     private final SocialRepository socialRepository;
     private final CredentialRepository credentialRepository;
     private final RoleRepository roleRepository;
-    private final PostService postService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final ModelMapper modelMapper;
@@ -105,7 +104,6 @@ public class UserService {
         credentialRepository.updatePassword(token, hashed);
     }
 
-    //    TODO: fetch user works statistic
     public UserDetailDTO getUserDetails() {
         User user = authUtils.getUserFromToken();
         if (user == null) {
@@ -123,13 +121,11 @@ public class UserService {
     }
 
     public void updateUserDetail(UserDetailUpdateDTO userDetailUpdateDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = ((UserDetails) (authentication.getPrincipal())).getUser();
+        User user = authUtils.getUserFromToken();
         modelMapper.map(userDetailUpdateDTO, user);
-        System.out.println(user.getId());
-        UserCredential userCredential =credentialRepository.findByUserId(user.getId());
-        userCredential.setEmail(userDetailUpdateDTO.getEmail());
-        credentialRepository.save(userCredential);
+//        UserCredential userCredential =credentialRepository.findByUserId(user.getId());
+//        userCredential.setEmail(userDetailUpdateDTO.getEmail());
+//        credentialRepository.save(userCredential);
         userRepository.save(user);
     }
 

@@ -5,6 +5,8 @@ import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.ReadingList;
 import com.phong.blog.Blog.Repository.ReadingListRepository;
 import com.phong.blog.Blog.Service.ReadingListService;
+import com.phong.blog.Logging.Model.UserActivity;
+import com.phong.blog.Logging.Service.UserActivityService;
 import com.phong.blog.Utils.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,12 +25,14 @@ import java.util.List;
 public class ReadingListController {
     private final ReadingListService readingListService;
     private final ModelMapper modelMapper;
+    private final UserActivityService userActivityService;
     private final AuthUtils authUtils;
 
     @Secured({"ADMIN","AUTHOR"})
     @PostMapping("/")
     public ReadingList createReadingList(@RequestBody ReadingListDTO readingListDTO) {
         ReadingList readingList = modelMapper.map(readingListDTO, ReadingList.class);
+        userActivityService.createUserActivity(new UserActivity("Create reading list " + readingListDTO.getName()));
         return readingListService.createReadingList(readingList);
     }
 

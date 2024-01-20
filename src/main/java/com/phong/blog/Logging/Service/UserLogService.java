@@ -19,7 +19,6 @@ public class UserLogService {
     private final UserRepository userRepository;
     private final AuthUtils authUtils;
     public void createUserLog(UserLog userLog) {
-//        User user = userRepository.findById(userLogDTO.getUserId()).orElse(null);
         User user = authUtils.getUserFromToken();
         if (user == null) {
             return;
@@ -28,7 +27,6 @@ public class UserLogService {
         userLogRepository.save(userLog);
     }
 
-    @Secured({"AUTHOR","ADMIN"})
     public List<UserLog> getUserLog() {
         User user = authUtils.getUserFromToken();
         return userLogRepository.getUserLog(user.getId());

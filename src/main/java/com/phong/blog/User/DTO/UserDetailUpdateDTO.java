@@ -7,5 +7,5 @@ public class UserDetailUpdateDTO {
     private String fullName;
     private String phone;
     private String bio;
-    private String email;
+//    private String email;
 }
