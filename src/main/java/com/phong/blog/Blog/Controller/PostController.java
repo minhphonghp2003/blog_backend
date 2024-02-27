@@ -69,8 +69,5 @@ public class PostController {
         postService.updatePostLike(postLikeDTO);
     }
 
-    @PutMapping("/statistic/comment")
-    public void updatePostLike(@RequestBody Comment comment) {
-        postService.updatePostComment(comment);
-    }
+
 }

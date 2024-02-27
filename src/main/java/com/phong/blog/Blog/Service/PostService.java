@@ -134,6 +134,4 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void updatePostComment(Comment comment) {
-    }
 }

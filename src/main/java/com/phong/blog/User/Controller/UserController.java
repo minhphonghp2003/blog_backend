@@ -46,6 +46,7 @@ public class UserController {
 
     }
 
+    @Secured({"ADMIN"})
     @PostMapping("/register")
     public LoginDTO register(@RequestBody RegisterDTO registerDTO) {
         User user = userService.createUser(registerDTO);
