@@ -39,7 +39,8 @@ jobs:
       uses: cross-the-world/ssh-pipeline@v1.2.0
       with:
         # ssh remote host
-        host: 178.128.102.168
+        
+        host:  ${{secrets.VPS_IP}}
         user:  ${{secrets.VPS_SSH_USERNAME}}
         # ssh remote password
         pass: ${{secrets.VPS_SSH_PASSWORD}}
