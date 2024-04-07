@@ -13,6 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("post")
 @RequiredArgsConstructor
@@ -25,7 +29,7 @@ public class PostController {
     @Secured({"ADMIN", "AUTHOR"})
     @PostMapping("/")
     public NewPostDTO createPost(@RequestBody NewPostDTO newPostDTO) {
-        NewPostDTO newPost=  modelMapper.map(postService.createPost(newPostDTO), newPostDTO.getClass());
+        NewPostDTO newPost = modelMapper.map(postService.createPost(newPostDTO), newPostDTO.getClass());
         userActivityService.createUserActivity(new UserActivity("Create post " + newPost.getTitle()));
         return newPost;
     }
@@ -33,9 +37,9 @@ public class PostController {
     @Secured({"ADMIN", "AUTHOR"})
     @PutMapping("/")
     public UpdatePostDTO updatePost(@RequestBody UpdatePostDTO updatePostDTO) {
-        UpdatePostDTO updatePost =  modelMapper.map(postService.updatePost(updatePostDTO), updatePostDTO.getClass());
+        UpdatePostDTO updatePost = modelMapper.map(postService.updatePost(updatePostDTO), updatePostDTO.getClass());
         userActivityService.createUserActivity(new UserActivity("Update post " + updatePost.getTitle()));
-        return  updatePost;
+        return updatePost;
     }
 
     @GetMapping("/")
@@ -44,9 +48,9 @@ public class PostController {
     }
 
 
-    @DeleteMapping("/")
+    @DeleteMapping("/{id}")
     @Secured({"ADMIN", "AUTHOR"})
-    public void deletePost(@RequestBody Integer id) {
+    public void deletePost(@PathVariable Integer id) {
         postService.deletePost(id);
         userActivityService.createUserActivity(new UserActivity("Delete post " + id));
     }
@@ -69,5 +73,14 @@ public class PostController {
         postService.updatePostLike(postLikeDTO);
     }
 
-
+    @GetMapping("/test")
+    public ArrayList<PostDTO> getAllTestPost() {
+        ArrayList<Post> postPage  = postService.getAllTestPost();
+        ArrayList<PostDTO> result = new ArrayList<>();
+        for (Post p :
+             postPage) {
+          result.add(modelMapper.map(postPage, PostDTO.class))  ;
+        }
+        return result;
+    }
 }

@@ -36,6 +36,6 @@ public class TagService {
         return tagRepository.findAllByStatus(EStatus.PENDING);
     }
     public List<Tag> getAllTags(){
-       return tagRepository.findAllByStatus(EStatus.ACTIVE) ;
+       return tagRepository.findAll();
     }
 }

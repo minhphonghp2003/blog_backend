@@ -64,7 +64,7 @@ public class PostService {
     public Page<Post> getAllPost(AllPostReqDTO allPostReqDTO) {
         Page<Post> posts = null;
         Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(new String[]{String.valueOf(allPostReqDTO.getSortBy())}).descending());
-        posts = postRepository.findBySomething(pageable,allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId());
+        posts = postRepository.findBySomethingV2(pageable,allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId());
         return posts;
     }
 
@@ -94,6 +94,7 @@ public class PostService {
     }
 
     public Post updatePost(UpdatePostDTO updatePostDTO) {
+
         Post post = postRepository.findById(updatePostDTO.getId());
         post.setTitle(updatePostDTO.getTitle());
         post.setForeword(updatePostDTO.getForeword());
@@ -133,5 +134,10 @@ public class PostService {
         }
         postRepository.save(post);
     }
+    public ArrayList<Post> getAllTestPost(){
+
+        return  postRepository.findTestPost();
+    }
+
 
 }

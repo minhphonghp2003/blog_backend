@@ -1,9 +1,6 @@
 package com.phong.blog.Blog.Repository;
 
 import com.phong.blog.Blog.Model.Post;
-import com.phong.blog.Blog.Model.ReadingList;
-import com.phong.blog.Blog.Model.Topic;
-import com.phong.blog.User.Model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,4 +25,9 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     public Page<Post> findAll(Pageable pageable);
 
+    @Query(value = com.phong.blog.namedQueries.Post.allPost, nativeQuery = true)
+    public Page<Post> findBySomethingV2(Pageable pageable, @Param("readingListId") Integer readingListId, @Param("authorId") String authorId, @Param("topicId") Integer topicId);
+    @Query(value = com.phong.blog.namedQueries.Post.QUERY, nativeQuery = true)
+
+    public ArrayList<Post> findTestPost();
 }

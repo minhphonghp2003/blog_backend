@@ -42,6 +42,6 @@ public class TopicService {
     }
 
     public List<Topic> getAllTopic() {
-        return topicRepository.findByStatus(EStatus.ACTIVE);
+        return topicRepository.findAll();
     }
 }
