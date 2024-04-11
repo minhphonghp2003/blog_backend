@@ -1,7 +1,9 @@
-package com.phong.blog.User.Repository;
+package com.phong.blog.User.Service;
 
 import com.phong.blog.User.Model.User;
 import com.phong.blog.User.Model.UserCredential;
+import com.phong.blog.User.Repository.CredentialRepository;
+import com.phong.blog.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

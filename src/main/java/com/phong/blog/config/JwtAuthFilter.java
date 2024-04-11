@@ -1,6 +1,6 @@
 package com.phong.blog.config;
 
-import com.phong.blog.User.Repository.UserDetailService;
+import com.phong.blog.User.Service.UserDetailService;
 import com.phong.blog.Utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

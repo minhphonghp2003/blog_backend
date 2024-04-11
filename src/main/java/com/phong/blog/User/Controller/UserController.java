@@ -38,7 +38,6 @@ public class UserController {
         return authUtils.isAdmin();
     }
 
-    @Secured({"ADMIN"})
     @GetMapping("/alluser")
     public List<AllUserDTO> getAllUser() {
         return modelMapper.map(userService.getAllUser(), new TypeToken<List<AllUserDTO>>() {
@@ -93,7 +92,7 @@ public class UserController {
         }
     }
 
-    @Secured({"ADMIN", "AUTHOR"})
+//    @Secured({"ADMIN", "AUTHOR"})
     @GetMapping("/userDetail")
     public UserDetailDTO getUserDetail() {
         return userService.getUserDetails();
@@ -120,4 +119,5 @@ public class UserController {
     public AuthorDTO getAuthor(String id) {
         return modelMapper.map(userService.getAuthorDetail(UUID.fromString(id)), AuthorDTO.class);
     }
+
 }

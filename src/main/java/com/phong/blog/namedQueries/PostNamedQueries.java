@@ -1,6 +1,6 @@
 package com.phong.blog.namedQueries;
 
-public class Post {
+public class PostNamedQueries {
     public static final String QUERY =
             """
             SELECT * 

@@ -3,6 +3,7 @@ package com.phong.blog.Blog.Controller;
 import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.Tag;
 import com.phong.blog.Blog.Service.TagService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
