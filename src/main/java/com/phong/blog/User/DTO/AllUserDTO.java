@@ -15,11 +15,13 @@ class CredDTO{
 }
 @Data
 public class AllUserDTO {
+    private String avatar;
     private UUID id;
-    private String name;
+    private String fullName;
     private List<Role> roles;
     private String phone;
     private Status status;
-    private String email;
+//    private String username;
+//    private String email;
     private CredDTO credential;
 }

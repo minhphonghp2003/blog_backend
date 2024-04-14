@@ -4,4 +4,5 @@ public enum ERole {
     ADMIN,
     AUTHOR,
     READER,
+    MODERATOR,
 }

@@ -23,4 +23,7 @@ public class RoleNamedQueries {
     public static final String getAllActionV2 = """
             select new ActionDTO(a.name as actionName,r.name as roleName,a.id as actionId, r.id as roleId) from Action a 
                         """;
+    public static final String assignRoleToUer = """
+            insert into user_role (user_id,role_id) values (:userId,:roleId)
+            """;
 }

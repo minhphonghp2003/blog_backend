@@ -55,7 +55,8 @@ public class UserService {
             Role role = roleRepository.findByName(ERole.valueOf(r));
             user.getRoles().add(role);
         });
-        UserCredential credential = modelMapper.map(registerDTO, UserCredential.class);
+        UserCredential credential = new UserCredential();
+        modelMapper.map(registerDTO, credential);
         User newUser = userRepository.save(user);
 
         String hashed = passwordEncoder.encode(registerDTO.getPassword());
@@ -81,6 +82,7 @@ public class UserService {
         return jwt;
     }
 
+    //    TODO:secure method
     @Transactional
     public String updateRecvToken(String email) {
         String token = UUID.randomUUID().toString();

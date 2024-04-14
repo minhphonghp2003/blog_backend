@@ -17,7 +17,7 @@ public class User {
     private UUID id;
     private String fullName;
     private String phone;
-    private String bio;
+    private String bio = "HELLO WORLD";
     @ManyToOne
     @JoinColumn(name = "status_id")
     private Status status;

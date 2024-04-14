@@ -7,6 +7,7 @@ import com.phong.blog.User.Service.UserService;
 import com.phong.blog.User.Model.User;
 import com.phong.blog.Utils.AuthUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -21,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("user")
@@ -32,7 +35,6 @@ public class UserController {
     private final ModelMapper modelMapper;
     private final AuthUtils authUtils;
 
-    @Secured({"ADMIN", "AUTHOR"})
     @GetMapping("/checkAdmin")
     public Boolean isAdmin() {
         return authUtils.isAdmin();
@@ -40,12 +42,20 @@ public class UserController {
 
     @GetMapping("/alluser")
     public List<AllUserDTO> getAllUser() {
-        return modelMapper.map(userService.getAllUser(), new TypeToken<List<AllUserDTO>>() {
+        List<User> allUser = userService.getAllUser();
+//        List<AllUserDTO> allUserDTOS = allUser.stream().map(user -> {
+//            AllUserDTO userDTO =  modelMapper.map(user, AllUserDTO.class);
+//            userDTO.setEmail(user.getCredential().getEmail());
+//            userDTO.setUsername(user.getCredential().getUsername());
+//            return userDTO;
+//        }).collect(Collectors.toList());
+//
+//        return allUserDTOS;
+        return modelMapper.map(allUser, new TypeToken<List<AllUserDTO>>() {
         }.getType());
 
     }
 
-    @Secured({"ADMIN"})
     @PostMapping("/register")
     public LoginDTO register(@RequestBody RegisterDTO registerDTO) {
         User user = userService.createUser(registerDTO);
@@ -92,13 +102,11 @@ public class UserController {
         }
     }
 
-//    @Secured({"ADMIN", "AUTHOR"})
     @GetMapping("/userDetail")
     public UserDetailDTO getUserDetail() {
         return userService.getUserDetails();
     }
 
-    @Secured({"ADMIN", "AUTHOR"})
     @PutMapping("/userDetail")
     public void updateUserDetail(@RequestBody UserDetailUpdateDTO userDetailUpdateDTO) {
         userService.updateUserDetail(userDetailUpdateDTO);

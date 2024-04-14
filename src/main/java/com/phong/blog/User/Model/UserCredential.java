@@ -13,8 +13,8 @@ import lombok.ToString;
 @ToString(exclude = "user")
 public class UserCredential {
     @Id
+    @GeneratedValue(strategy =GenerationType.IDENTITY )
     private int id;
-    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
