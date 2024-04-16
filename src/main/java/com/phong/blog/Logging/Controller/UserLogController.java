@@ -23,7 +23,6 @@ import java.util.UUID;
 @RequestMapping("log")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@Secured({"AUTHOR","ADMIN"})
 public class UserLogController {
     private final UserLogService userLogService;
     private final ModelMapper modelMapper;

@@ -1,6 +1,7 @@
 package com.phong.blog.Blog.Service;
 
 import com.phong.blog.Blog.DTO.ReadingListDTO;
+import com.phong.blog.Blog.DTO.StatusChangeDTO;
 import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.ReadingList;
 import com.phong.blog.Blog.Repository.ReadingListRepository;
@@ -27,4 +28,11 @@ public class ReadingListService {
         return readingListRepository.findAll();
     }
 
+    public void updateRListStatus(StatusChangeDTO statusChangeDTO) {
+        ReadingList rlist = readingListRepository.findById(statusChangeDTO.getTargetId()).orElse(null);
+        EStatus status = statusChangeDTO.getStatus();
+        rlist.setStatus(status);
+        readingListRepository.save(rlist);
+
+    }
 }

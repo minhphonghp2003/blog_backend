@@ -1,6 +1,7 @@
 package com.phong.blog.Blog.Controller;
 
 import com.phong.blog.Blog.DTO.ReadingListDTO;
+import com.phong.blog.Blog.DTO.StatusChangeDTO;
 import com.phong.blog.Blog.DTO.TopicDTO;
 import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.ReadingList;
@@ -36,14 +37,12 @@ public class TopicController {
         }
     }
 
-    @Secured({"ADMIN", "AUTHOR"})
     @PostMapping("/")
     public Topic createTopic(@RequestBody TopicDTO topicDTO) {
         userActivityService.createUserActivity(new UserActivity("Create topic " + topicDTO.getName()));
         return topicService.createTopic(modelMapper.map(topicDTO, Topic.class));
     }
 
-    @Secured("ADMIN")
     @GetMapping("/pending")
     public List<TopicDTO> getPendingTopic() {
         List<Topic> topics = topicService.getPendingTopic();
@@ -51,13 +50,11 @@ public class TopicController {
         }.getType());
     }
 
-    @Secured("ADMIN")
-    @PutMapping("/")
-    public void acceptPendingTopic(@RequestBody int id) {
-        topicService.updateTopicStatus(id, EStatus.ACTIVE);
+    @PutMapping("/status")
+    public void changeStatus(@RequestBody StatusChangeDTO statusChangeDTO) {
+        topicService.updateTopicStatus(statusChangeDTO);
     }
 
-    @Secured("ADMIN")
     @DeleteMapping("/")
     public void deleteTopic(@RequestBody int id) {
         topicService.removeTopic(id);

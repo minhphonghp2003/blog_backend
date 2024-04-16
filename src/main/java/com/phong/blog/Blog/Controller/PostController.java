@@ -26,7 +26,6 @@ public class PostController {
     private final PostService postService;
     private final UserActivityService userActivityService;
 
-    @Secured({"ADMIN", "AUTHOR"})
     @PostMapping("/")
     public NewPostDTO createPost(@RequestBody NewPostDTO newPostDTO) {
         NewPostDTO newPost = modelMapper.map(postService.createPost(newPostDTO), newPostDTO.getClass());
@@ -34,7 +33,6 @@ public class PostController {
         return newPost;
     }
 
-    @Secured({"ADMIN", "AUTHOR"})
     @PutMapping("/")
     public UpdatePostDTO updatePost(@RequestBody UpdatePostDTO updatePostDTO) {
         UpdatePostDTO updatePost = modelMapper.map(postService.updatePost(updatePostDTO), updatePostDTO.getClass());
@@ -42,14 +40,13 @@ public class PostController {
         return updatePost;
     }
 
-    @GetMapping("/")
+    @GetMapping("/detail")
     public PostDTO getPost(int id) {
         return postService.getPost(id);
     }
 
 
     @DeleteMapping("/{id}")
-    @Secured({"ADMIN", "AUTHOR"})
     public void deletePost(@PathVariable Integer id) {
         postService.deletePost(id);
         userActivityService.createUserActivity(new UserActivity("Delete post " + id));

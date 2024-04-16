@@ -11,14 +11,21 @@ import com.phong.blog.Utils.JwtUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.http.HttpEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +35,7 @@ import java.util.*;
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
     private final AuthUtils authUtils;
@@ -38,6 +46,7 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final ModelMapper modelMapper;
     private final JwtUtils jwtUtils;
+    private final RestTemplate restTemplate;
 
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -95,13 +104,28 @@ public class UserService {
             } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
             }
-
         });
         return token;
     }
 
+
+    public void sendEmail(ResetEmailDTO resetEmailDTO) {
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+        map.add("to", resetEmailDTO.getTo());
+        map.add("token", resetEmailDTO.getToken());
+        map.add("server", resetEmailDTO.getServer());
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, null);
+        String url = "https://eow8ijpnrwxsdra.m.pipedream.net";
+        restTemplate.postForObject(url, request, String.class);
+
+    }
+
     @Transactional
     public void resetPassword(String token, String password) {
+        if (token == null || token.length() == 0) {
+            User user = authUtils.getUserFromToken();
+            token = updateRecvToken(user.getCredential().getEmail());
+        }
         String hashed = passwordEncoder.encode(password);
         credentialRepository.updatePassword(token, hashed);
     }

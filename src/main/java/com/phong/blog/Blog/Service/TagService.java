@@ -1,5 +1,6 @@
 package com.phong.blog.Blog.Service;
 
+import com.phong.blog.Blog.DTO.StatusChangeDTO;
 import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.Tag;
 import com.phong.blog.Blog.Repository.TagRepository;
@@ -22,9 +23,9 @@ public class TagService {
         return tagRepository.save(tag);
     }
 
-    public void updateTagStatus(int id, EStatus status){
-       Tag tag = tagRepository.findById(id) ;
-       tag.setStatus(status);
+    public void updateTagStatus(StatusChangeDTO statusChangeDTO){
+       Tag tag = tagRepository.findById(statusChangeDTO.getTargetId()) ;
+       tag.setStatus(statusChangeDTO.getStatus());
        tagRepository.save(tag);
     }
 

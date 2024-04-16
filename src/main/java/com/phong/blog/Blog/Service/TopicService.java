@@ -1,5 +1,6 @@
 package com.phong.blog.Blog.Service;
 
+import com.phong.blog.Blog.DTO.StatusChangeDTO;
 import com.phong.blog.Blog.DTO.TopicDTO;
 import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.Topic;
@@ -23,6 +24,9 @@ public class TopicService {
 
         if(authUtils.isAdmin()){
             topic.setStatus(EStatus.ACTIVE);
+        }else{
+
+            topic.setStatus(EStatus.PENDING);
         }
         return topicRepository.save(topic);
     }
@@ -31,9 +35,9 @@ public class TopicService {
     }
 
     @Transactional
-    public void updateTopicStatus(int id, EStatus status){
-        Topic topic = topicRepository.findById(id).orElse(null);
-        topic.setStatus(status);
+    public void updateTopicStatus(StatusChangeDTO statusChangeDTO){
+        Topic topic = topicRepository.findById(statusChangeDTO.getTargetId()).orElse(null);
+        topic.setStatus(statusChangeDTO.getStatus());
         topicRepository.save(topic);
     }
 

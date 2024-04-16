@@ -41,8 +41,11 @@ public class PostService {
         }
         Post newPost = modelMapper.map(newPostDTO, Post.class);
         User author = authUtils.getUserFromToken();
-        ReadingList readingList = readingListRepository.findById(newPostDTO.getReadingListId()).orElse(null);
-        Topic topic = topicRepository.findById(newPostDTO.getTopicId()).orElse(null);
+        ReadingList readingList = readingListRepository.findByIdAndStatus(newPostDTO.getReadingListId(),EStatus.ACTIVE).orElse(null);
+        Topic topic = topicRepository.findByIdAndStatus(newPostDTO.getTopicId(),EStatus.ACTIVE).orElse(null);
+        if(readingList==null || topic == null){
+            return null;
+        }
         Set<Tag> tags = new HashSet<>();
         for (int i :
                 newPostDTO.getTagIds()) {

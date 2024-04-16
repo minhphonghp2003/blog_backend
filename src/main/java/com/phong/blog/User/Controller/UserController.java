@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,8 @@ public class UserController {
     private final UserActivityService userActivityService;
     private final ModelMapper modelMapper;
     private final AuthUtils authUtils;
+    @Value("${frontEnd}")
+    private String frontEnd;
 
     @GetMapping("/checkAdmin")
     public Boolean isAdmin() {
@@ -43,14 +46,6 @@ public class UserController {
     @GetMapping("/alluser")
     public List<AllUserDTO> getAllUser() {
         List<User> allUser = userService.getAllUser();
-//        List<AllUserDTO> allUserDTOS = allUser.stream().map(user -> {
-//            AllUserDTO userDTO =  modelMapper.map(user, AllUserDTO.class);
-//            userDTO.setEmail(user.getCredential().getEmail());
-//            userDTO.setUsername(user.getCredential().getUsername());
-//            return userDTO;
-//        }).collect(Collectors.toList());
-//
-//        return allUserDTOS;
         return modelMapper.map(allUser, new TypeToken<List<AllUserDTO>>() {
         }.getType());
 
@@ -82,8 +77,11 @@ public class UserController {
     @PostMapping("/recvToken")
     public ResponseEntity<Map<String, String>> getRecvToken(@RequestBody String email) {
         try {
+            String token = userService.updateRecvToken(email);
+            ResetEmailDTO resetEmailDTO = new ResetEmailDTO(email, token, frontEnd + "/forgot");
+            userService.sendEmail(resetEmailDTO);
             Map<String, String> map = new HashMap<>();
-            map.put("token", userService.updateRecvToken(email));
+            map.put("status", "OK");
             return ResponseEntity.status(200).body(map);
 
         } catch (Exception e) {

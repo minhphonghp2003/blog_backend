@@ -1,6 +1,7 @@
 package com.phong.blog.Blog.Controller;
 
 import com.phong.blog.Blog.DTO.ReadingListDTO;
+import com.phong.blog.Blog.DTO.StatusChangeDTO;
 import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.ReadingList;
 import com.phong.blog.Blog.Repository.ReadingListRepository;
@@ -28,7 +29,6 @@ public class ReadingListController {
     private final UserActivityService userActivityService;
     private final AuthUtils authUtils;
 
-    @Secured({"ADMIN","AUTHOR"})
     @PostMapping("/")
     public ReadingList createReadingList(@RequestBody ReadingListDTO readingListDTO) {
         ReadingList readingList = modelMapper.map(readingListDTO, ReadingList.class);
@@ -42,6 +42,10 @@ public class ReadingListController {
         List<ReadingListDTO> readingListDTOS = modelMapper.map(readingLists, new TypeToken<List<ReadingListDTO>>() {}.getType());
 
         return readingListDTOS;
+    }
+    @PutMapping("/status")
+    public void changeStatus(@RequestBody StatusChangeDTO statusChangeDTO){
+        readingListService.updateRListStatus(statusChangeDTO);
     }
 
 }

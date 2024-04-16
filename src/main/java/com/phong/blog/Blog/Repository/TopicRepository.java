@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface TopicRepository extends JpaRepository<Topic,Integer> {
     public List<Topic> findByStatus(EStatus status);
-    public Optional<Topic> findById(Integer id);
+    public Optional<Topic> findByIdAndStatus(Integer id,EStatus status);
     public List<Topic> findAll();
 
 }
