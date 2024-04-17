@@ -41,9 +41,9 @@ public class PostService {
         }
         Post newPost = modelMapper.map(newPostDTO, Post.class);
         User author = authUtils.getUserFromToken();
-        ReadingList readingList = readingListRepository.findByIdAndStatus(newPostDTO.getReadingListId(),EStatus.ACTIVE).orElse(null);
-        Topic topic = topicRepository.findByIdAndStatus(newPostDTO.getTopicId(),EStatus.ACTIVE).orElse(null);
-        if(readingList==null || topic == null){
+        ReadingList readingList = readingListRepository.findByIdAndStatus(newPostDTO.getReadingListId(), EStatus.ACTIVE).orElse(null);
+        Topic topic = topicRepository.findByIdAndStatus(newPostDTO.getTopicId(), EStatus.ACTIVE).orElse(null);
+        if (readingList == null || topic == null) {
             return null;
         }
         Set<Tag> tags = new HashSet<>();
@@ -55,6 +55,7 @@ public class PostService {
         newPost.setReadingList(readingList);
         newPost.setTopic(topic);
         newPost.setTags(tags);
+        newPost.setStatus(EStatus.PENDING);
 
         PostStatistic statistic = new PostStatistic();
         statisticRepository.save(statistic);
@@ -64,10 +65,16 @@ public class PostService {
         return newPost;
     }
 
+    public void changePostStatus(StatusChangeDTO statusChangeDTO) {
+        Post post = postRepository.findById(statusChangeDTO.getTargetId());
+        post.setStatus(statusChangeDTO.getStatus());
+        postRepository.save(post);
+    }
+
     public Page<Post> getAllPost(AllPostReqDTO allPostReqDTO) {
         Page<Post> posts = null;
         Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(new String[]{String.valueOf(allPostReqDTO.getSortBy())}).descending());
-        posts = postRepository.findBySomethingV2(pageable,allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId());
+        posts = postRepository.findBySomethingV2(pageable, allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId());
         return posts;
     }
 
@@ -137,9 +144,10 @@ public class PostService {
         }
         postRepository.save(post);
     }
-    public ArrayList<Post> getAllTestPost(){
 
-        return  postRepository.findTestPost();
+    public ArrayList<Post> getAllTestPost() {
+
+        return postRepository.findTestPost();
     }
 
 

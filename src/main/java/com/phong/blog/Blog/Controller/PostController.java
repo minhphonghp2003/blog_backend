@@ -40,6 +40,11 @@ public class PostController {
         return updatePost;
     }
 
+    @PutMapping("/status")
+    public void updatePostStatus(@RequestBody StatusChangeDTO statusChangeDTO) {
+        postService.changePostStatus(statusChangeDTO);
+    }
+
     @GetMapping("/detail")
     public PostDTO getPost(int id) {
         return postService.getPost(id);
@@ -72,11 +77,11 @@ public class PostController {
 
     @GetMapping("/test")
     public ArrayList<PostDTO> getAllTestPost() {
-        ArrayList<Post> postPage  = postService.getAllTestPost();
+        ArrayList<Post> postPage = postService.getAllTestPost();
         ArrayList<PostDTO> result = new ArrayList<>();
         for (Post p :
-             postPage) {
-          result.add(modelMapper.map(postPage, PostDTO.class))  ;
+                postPage) {
+            result.add(modelMapper.map(postPage, PostDTO.class));
         }
         return result;
     }

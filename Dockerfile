@@ -6,4 +6,4 @@ COPY mvnw pom.xml ./
 RUN chmod 777 mvnw
 RUN ./mvnw dependency:resolve
 COPY src ./src
-CMD [ "./mvnw","spring-boot:run","-Djwt_secret=$jwt_secret -DDB_PASS=$DB_PASS -DMONGO_USERNAME=$MONGO_USERNAME -DMONGO_PASS=$MONGO_PASS -DMONGO_CLUSTER=$MONGO_CLUSTER -DMONGO_DB=$MONGO_DB -Dbonsai_url=$bonsai_url"]
+CMD [ "./mvnw","spring-boot:run"]

@@ -62,4 +62,5 @@ public class PostDTO {
     private Integer nextId;
     private String nextImageLink;
     private String nextTitle;
+    private String status;
 }

@@ -31,6 +31,7 @@ public class SearchController {
 
     @GetMapping("/post")
     public Page<SearchPost> searchPosts( PostSearchDTO postSearchDTO){
+//        return null;
         return searchService.searchPosts(postSearchDTO);
     }
 }

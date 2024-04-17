@@ -46,6 +46,8 @@ public class Post {
     private Set<Tag> tags;
     private String imageLink;
     private String postLink;
+    @Enumerated(EnumType.STRING)
+    private EStatus status;
     private String title;
     @ManyToMany()
     @JoinTable(
