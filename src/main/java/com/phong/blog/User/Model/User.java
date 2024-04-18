@@ -1,5 +1,6 @@
 package com.phong.blog.User.Model;
 
+import com.phong.blog.Blog.Model.Draft;
 import com.phong.blog.Blog.Model.Post;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +23,8 @@ public class User {
     @JoinColumn(name = "status_id")
     private Status status;
     private String avatar;
-
+    @OneToMany(mappedBy = "user")
+    private List<Draft> drafts;
     @OneToOne(mappedBy = "user")
     private UserCredential credential;
     @ManyToMany(fetch = FetchType.EAGER)

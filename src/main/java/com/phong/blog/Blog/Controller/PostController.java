@@ -1,6 +1,7 @@
 package com.phong.blog.Blog.Controller;
 
 import com.phong.blog.Blog.DTO.*;
+import com.phong.blog.Blog.Model.Draft;
 import com.phong.blog.Blog.Model.PostStatistic;
 import com.phong.blog.Blog.Model.Comment;
 import com.phong.blog.Blog.Model.Post;
@@ -84,5 +85,23 @@ public class PostController {
             result.add(modelMapper.map(postPage, PostDTO.class));
         }
         return result;
+    }
+
+    @GetMapping("/draft")
+    public List<DraftDTO> getUserDrafts() {
+        ArrayList<DraftDTO> results = new ArrayList<>();
+        for (Draft d : postService.getUserDrafts()) {
+            results.add(modelMapper.map(d, DraftDTO.class));
+        }
+        return results;
+    }
+
+    @PostMapping("/draft")
+    public DraftDTO createDraft(@RequestBody DraftDTO draftDTO) {
+        return modelMapper.map(postService.createDraft(draftDTO), DraftDTO.class);
+    }
+    @DeleteMapping("/draft")
+    public void deleteDraft(Integer id){
+        postService.deleteDraft(id);
     }
 }

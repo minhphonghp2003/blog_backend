@@ -26,7 +26,7 @@ public class ReaderService {
     }
 
     public Page<Reader> getAllReader(Integer page) {
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page, 40);
         return readerRepository.findAll(pageable);
     }
 }

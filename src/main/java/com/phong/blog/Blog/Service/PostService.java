@@ -31,6 +31,7 @@ public class PostService {
     private final ReaderRepository readerRepository;
     private final ModelMapper modelMapper;
     private final AuthUtils authUtils;
+    private final DraftRepository draftRepository;
 
     @Transactional
     public Post createPost(NewPostDTO newPostDTO) {
@@ -151,4 +152,27 @@ public class PostService {
     }
 
 
+    public List<Draft> getUserDrafts() {
+        User user = authUtils.getUserFromToken();
+        return draftRepository.findAllByUser(user);
+
+    }
+
+    public Draft createDraft(DraftDTO draftDTO) {
+        User user = authUtils.getUserFromToken();
+        Draft draft = new Draft();
+        draft.setPath(draftDTO.getPath());
+        draft.setUser(user);
+        return draftRepository.save(draft);
+    }
+
+    public void deleteDraft(Integer id) {
+        User user = authUtils.getUserFromToken();
+        Draft draft = draftRepository.findById(id).orElse(null);
+        if(draft==null || !draft.getUser().getId().equals(user.getId())){
+            return;
+        }
+
+        draftRepository.deleteById(id);
+    }
 }
