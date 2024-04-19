@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface ReadingListRepository extends JpaRepository<ReadingList,Integer> {
     public List<ReadingList>  findAll();
     public Optional<ReadingList> findByIdAndStatus(Integer id, EStatus status);
+
+    List<ReadingList> findAllByStatus(EStatus eStatus);
 }

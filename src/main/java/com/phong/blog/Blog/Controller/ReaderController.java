@@ -30,7 +30,10 @@ public class ReaderController {
 
     @GetMapping("/all")
     public Page<Reader> getAllReader(Integer page) {
-
         return readerService.getAllReader(page);
+    }
+    @GetMapping("/detail")
+    public Reader getReaderDetail(String id){
+        return readerService.getReader(UUID.fromString(id));
     }
 }

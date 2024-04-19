@@ -75,7 +75,12 @@ public class PostService {
     public Page<Post> getAllPost(AllPostReqDTO allPostReqDTO) {
         Page<Post> posts = null;
         Pageable pageable = PageRequest.of(allPostReqDTO.getPage(), allPostReqDTO.getLimit(), Sort.by(new String[]{String.valueOf(allPostReqDTO.getSortBy())}).descending());
-        posts = postRepository.findBySomethingV2(pageable, allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId());
+        String status = null;
+        if (authUtils.getUserFromToken() == null) {
+            status = "ACTIVE";
+        }
+        posts = postRepository.findBySomethingV2(pageable, allPostReqDTO.getReadingListId(), allPostReqDTO.getAuthorId(), allPostReqDTO.getTopicId(), status);
+
         return posts;
     }
 
@@ -169,7 +174,7 @@ public class PostService {
     public void deleteDraft(Integer id) {
         User user = authUtils.getUserFromToken();
         Draft draft = draftRepository.findById(id).orElse(null);
-        if(draft==null || !draft.getUser().getId().equals(user.getId())){
+        if (draft == null || !draft.getUser().getId().equals(user.getId())) {
             return;
         }
 

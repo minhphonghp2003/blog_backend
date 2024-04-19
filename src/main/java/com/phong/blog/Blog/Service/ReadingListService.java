@@ -25,6 +25,9 @@ public class ReadingListService {
         return readingListRepository.save(readingList);
     }
     public List<ReadingList> getAllReadingList(){
+        if(authUtils.getUserFromToken()==null){
+            return readingListRepository.findAllByStatus(EStatus.ACTIVE);
+        }
         return readingListRepository.findAll();
     }
 

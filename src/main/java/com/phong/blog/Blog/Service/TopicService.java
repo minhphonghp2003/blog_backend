@@ -46,6 +46,9 @@ public class TopicService {
     }
 
     public List<Topic> getAllTopic() {
+        if(authUtils.getUserFromToken() == null){
+            return topicRepository.findByStatus(EStatus.ACTIVE);
+        }
         return topicRepository.findAll();
     }
 }

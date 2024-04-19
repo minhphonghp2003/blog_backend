@@ -19,10 +19,16 @@ public class AuthUtils {
         }
         return false;
     }
-    public User getUserFromToken(){
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        return userDetails.getUser();
+
+    public User getUserFromToken() {
+        try {
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal();
+            return userDetails.getUser();
+
+        } catch (Exception e) {
+            return null;
+        }
 
     }
 

@@ -27,7 +27,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     public Page<Post> findAll(Pageable pageable);
 
     @Query(value = PostNamedQueries.allPost, nativeQuery = true)
-    public Page<Post> findBySomethingV2(Pageable pageable, @Param("readingListId") Integer readingListId, @Param("authorId") String authorId, @Param("topicId") Integer topicId);
+    public Page<Post> findBySomethingV2(Pageable pageable, @Param("readingListId") Integer readingListId, @Param("authorId") String authorId, @Param("topicId") Integer topicId, @Param("status") String status);
+
     @Query(value = PostNamedQueries.QUERY, nativeQuery = true)
 
     public ArrayList<Post> findTestPost();
