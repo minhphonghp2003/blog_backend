@@ -91,7 +91,6 @@ public class UserService {
         return jwt;
     }
 
-    //    TODO:secure method
     @Transactional
     public String updateRecvToken(String email) {
         String token = UUID.randomUUID().toString();

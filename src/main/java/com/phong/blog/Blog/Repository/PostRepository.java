@@ -1,5 +1,6 @@
 package com.phong.blog.Blog.Repository;
 
+import com.phong.blog.Blog.Model.EStatus;
 import com.phong.blog.Blog.Model.Post;
 import com.phong.blog.namedQueries.PostNamedQueries;
 import org.springframework.data.domain.Page;
@@ -32,4 +33,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query(value = PostNamedQueries.QUERY, nativeQuery = true)
 
     public ArrayList<Post> findTestPost();
+
+    List<Post> findByIdGreaterThanAndStatusLike(int id, EStatus eStatus);
 }

@@ -97,7 +97,7 @@ public class PostService {
     }
 
     public PostDTO getPost(int id) {
-        List<Post> nextPosts = postRepository.findByIdGreaterThan(id).orElse(null);
+        List<Post> nextPosts = postRepository.findByIdGreaterThanAndStatusLike(id, EStatus.ACTIVE);
         Post post = postRepository.findById(id);
         PostDTO postDTO = modelMapper.map(post, PostDTO.class);
         if (nextPosts.size() > 0) {

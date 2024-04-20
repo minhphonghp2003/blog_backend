@@ -26,7 +26,6 @@ public class SearchPost {
     private String content;
     private User author;
     private Topic topic;
-//    private List<Tag> tags;
     private String imageLink;
     private String title;
     private String foreword;
