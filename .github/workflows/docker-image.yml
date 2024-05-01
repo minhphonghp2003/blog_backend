@@ -47,7 +47,7 @@ jobs:
       
         # execute commands on ssh
         script: |
-                docker stop $(docker ps -a -q --filter ancestor=${{secrets.DOCKER_IMAGE}} --format="{{.ID}}")
+                docker stop $(docker ps -a -q --filter ancestor=${{secrets.DOCKER_IMAGE}} --format="{{.ID}}") || true
                 docker pull ${{secrets.DOCKER_IMAGE}}
                 docker run --env-file .env -dp 8888:8080 --name $(date +'%Y-%m-%dT%H-%M-%S') ${{secrets.DOCKER_IMAGE}} 
        
