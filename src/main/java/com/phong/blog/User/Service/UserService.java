@@ -47,7 +47,6 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final JwtUtils jwtUtils;
     private final RestTemplate restTemplate;
-//TODO:get correct user
     public List<User> getAllUser() {
         return userRepository.findAll();
     }

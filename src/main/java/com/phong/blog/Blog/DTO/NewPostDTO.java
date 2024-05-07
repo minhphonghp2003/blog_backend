@@ -21,7 +21,7 @@ public class NewPostDTO {
     private String foreword;
     private String imageLink;
     private Set<Integer> tagIds;
-    private int readingListId;
+    private Integer readingListId;
     private int topicId;
     private String postLink;
 }
